@@ -1,5 +1,7 @@
 package hu.bme.ecommercebackend.model;
 
+import hu.bme.ecommercebackend.dto.Category.CategoryCreateDto;
+import jakarta.annotation.Generated;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -11,6 +13,7 @@ import java.util.List;
 @Entity
 public class Category {
     @Id
+    @GeneratedValue
     private Long id;
 
     private String name;
@@ -22,4 +25,10 @@ public class Category {
     @JoinColumn(name = "parent_id")
     @Nullable
     private Category parentCategory;
+
+    public Category(String name, List<Category> subCategories, Category parentCategory) {
+        this.subCategories = subCategories;
+        this.parentCategory = parentCategory;
+        this.name = name;
+    }
 }

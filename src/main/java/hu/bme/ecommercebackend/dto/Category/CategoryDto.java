@@ -1,4 +1,4 @@
-package hu.bme.ecommercebackend.dto;
+package hu.bme.ecommercebackend.dto.Category;
 
 import hu.bme.ecommercebackend.model.Category;
 import jakarta.annotation.Nullable;
