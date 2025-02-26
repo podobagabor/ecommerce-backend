@@ -33,16 +33,38 @@ public class CategoryService {
         return temp.stream().map(CategoryDto::new).collect(Collectors.toList());
     }
 
-    public CategoryDto createCategory(CategoryCreateDto newCategory) {
+    public CategoryDto createCategoryDto(CategoryCreateDto newCategory) {
+        Category categoryEntity = createCategory(newCategory);
+        return new CategoryDto(categoryEntity);
+    }
+
+    private Category createCategory(CategoryCreateDto newCategory) {
         Category parentCategory = null;
         if(newCategory.getParentCategoryId() != null) {
             parentCategory = categoryRepository.findById(newCategory.getParentCategoryId()).orElseThrow( () -> new EntityNotFoundException("Unknown parent category id"));
         }
         List<Category> subCategories = new ArrayList<>();
         subCategories = categoryRepository.findAllById(newCategory.getSubCategoryIds());
-        Category categoryEntity =categoryRepository.save(new Category(
+        Category categoryEntity = categoryRepository.save(new Category(
                 newCategory.getName(), subCategories,parentCategory
         ));
+        return categoryEntity;
+    }
+
+    public CategoryDto modifiyCategory(CategoryDto categoryDto) {
+        CategoryCreateDto tempCategory = new CategoryCreateDto(
+                categoryDto.getName(),
+                categoryDto.getSubCategoryIds(),
+                categoryDto.getParentCategoryId()
+        );
+        Category modifiedCategory = createCategory(tempCategory);
+        modifiedCategory.setId(categoryDto.getId());
+        Category categoryEntity = categoryRepository.save(modifiedCategory);
         return new CategoryDto(categoryEntity);
+    }
+
+    public String deleteCategoryWithId(Long id) {
+        categoryRepository.deleteById(id);
+        return "Successful deleting";
     }
 }

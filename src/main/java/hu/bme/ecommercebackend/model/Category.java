@@ -5,15 +5,18 @@ import jakarta.annotation.Generated;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
 @Entity
+@Setter
 public class Category {
     @Id
     @GeneratedValue
+
     private Long id;
 
     private String name;
@@ -31,4 +34,6 @@ public class Category {
         this.parentCategory = parentCategory;
         this.name = name;
     }
+
+    public Category() {}
 }
