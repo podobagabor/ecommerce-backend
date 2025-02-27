@@ -35,7 +35,8 @@ public class CategoryService {
 
     public CategoryDto createCategoryDto(CategoryCreateDto newCategory) {
         Category categoryEntity = createCategory(newCategory);
-        return new CategoryDto(categoryEntity);
+        Category tempCategory = categoryRepository.save(categoryEntity);
+        return new CategoryDto(tempCategory);
     }
 
     private Category createCategory(CategoryCreateDto newCategory) {
@@ -45,10 +46,9 @@ public class CategoryService {
         }
         List<Category> subCategories = new ArrayList<>();
         subCategories = categoryRepository.findAllById(newCategory.getSubCategoryIds());
-        Category categoryEntity = categoryRepository.save(new Category(
+        return new Category(
                 newCategory.getName(), subCategories,parentCategory
-        ));
-        return categoryEntity;
+        );
     }
 
     public CategoryDto modifiyCategory(CategoryDto categoryDto) {
