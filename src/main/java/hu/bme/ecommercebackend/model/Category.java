@@ -8,24 +8,19 @@ import lombok.Setter;
 import java.util.ArrayList;
 import java.util.List;
 
-
+@Getter
 @Setter
 @Entity
 public class Category {
     @Id
     @GeneratedValue
-    @Getter
-
     private Long id;
 
-    @Getter
     private String name;
 
-    @Getter
     @OneToMany(mappedBy = "parentCategory", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Category> subCategories = new ArrayList<>();
 
-    @Getter
     @ManyToOne
     @JoinColumn(name = "parent_id")
     @Nullable

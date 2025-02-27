@@ -51,7 +51,7 @@ public class CategoryService {
         );
     }
 
-    public CategoryDto modifiyCategory(CategoryDto categoryDto) {
+    public CategoryDto modifyCategory(CategoryDto categoryDto) {
         CategoryCreateDto tempCategory = new CategoryCreateDto(
                 categoryDto.getName(),
                 categoryDto.getSubCategoryIds(),

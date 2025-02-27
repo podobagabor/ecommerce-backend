@@ -35,7 +35,7 @@ public class CategoryController {
 
     @PutMapping("/modify")
     public ResponseEntity<CategoryDto> modifyCategory(@RequestBody CategoryDto categoryDto) {
-        return ResponseEntity.ok(categoryService.modifiyCategory(categoryDto));
+        return ResponseEntity.ok(categoryService.modifyCategory(categoryDto));
     }
 
     @DeleteMapping("/delete/{id}")
