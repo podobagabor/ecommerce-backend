@@ -3,6 +3,7 @@ package hu.bme.ecommercebackend.model;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -18,13 +19,14 @@ public class Brand {
 
     private String name;
 
-    private String imageUrl;
+    @OneToOne
+    private Image image;
 
     private String description;
 
-    public Brand(String name, String imageUrl, String description) {
+    public Brand(String name, Image image, String description) {
         this.name = name;
-        this.imageUrl = imageUrl;
+        this.image = image;
         this.description = description;
     }
 }

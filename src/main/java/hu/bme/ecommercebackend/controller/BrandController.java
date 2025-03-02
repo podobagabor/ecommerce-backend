@@ -4,6 +4,8 @@ import hu.bme.ecommercebackend.dto.Brand.BrandCreateDto;
 import hu.bme.ecommercebackend.dto.Brand.BrandDto;
 import hu.bme.ecommercebackend.service.BrandService;
 import hu.bme.ecommercebackend.service.CategoryService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -19,27 +21,32 @@ public class BrandController {
     }
 
     @PostMapping("/create")
-    public BrandDto createBrand(@RequestParam("name") String name,@RequestParam("description") String description, @RequestParam("image") MultipartFile image) {
-        return this.brandService.createBrand(new BrandCreateDto(name,description),image);
+    public ResponseEntity<BrandDto> createBrand(@RequestParam("name") String name,@RequestParam("description") String description, @RequestParam("image") MultipartFile image) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(this.brandService.createBrand(new BrandCreateDto(name,description),image));
     }
 
     @GetMapping("/list")
-    public List<BrandDto> getBrandList() {
-        return this.brandService.getBrandList();
+    public ResponseEntity<List<BrandDto>> getBrandList() {
+        return ResponseEntity.ok(this.brandService.getBrandList());
     }
 
     @GetMapping("/{id}")
-    public BrandDto getBrandById(@PathVariable Long id) {
-        return brandService.getBrandById(id);
+    public ResponseEntity<BrandDto> getBrandById(@PathVariable Long id) {
+        return ResponseEntity.ok(brandService.getBrandById(id));
     }
 
     @DeleteMapping("/delete/{id}")
-    public String deleteBrand(@PathVariable Long id) {
-        return brandService.deleteBrand(id);
+    public ResponseEntity<String> deleteBrand(@PathVariable Long id) {
+        return ResponseEntity.ok(brandService.deleteBrand(id));
     }
 
     @PutMapping("/modify")
-    public BrandDto modifyBrand(@RequestBody BrandDto brandDto) {
-        return brandService.modifyBrand(brandDto);
+    public ResponseEntity<BrandDto> modifyBrand(@RequestBody BrandDto brandDto) {
+        return ResponseEntity.ok(brandService.modifyBrand(brandDto));
+    }
+
+    @PutMapping("/modifyImage/{id}")
+    public ResponseEntity<BrandDto> modifyBrand(@PathVariable Long id, @RequestParam("newImage") MultipartFile file) {
+        return ResponseEntity.ok(brandService.modifyImage(id,file));
     }
 }
