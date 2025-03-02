@@ -4,6 +4,7 @@ import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.Getter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -19,8 +20,11 @@ public class Product {
     @Nullable
     private Integer discountPercentage;
 
-    @OneToMany
-    private List<Image> images;
+    @ElementCollection
+    @CollectionTable(name = "product_images", joinColumns = @JoinColumn(name = "product_id"))
+    @Column(name = "image")
+    private List<String> images = new ArrayList<>();
+
     private Integer price;
     @ManyToOne
     private Category category;

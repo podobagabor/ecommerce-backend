@@ -19,7 +19,7 @@ public class BrandDto {
     public BrandDto(Brand brand) {
         this.id = brand.getId();
         this.name = brand.getName();
-        this.imageUrl = brand.getImage().getImageUrl();
+        this.imageUrl = brand.getImage();
         this.description = brand.getDescription();
     }
 }

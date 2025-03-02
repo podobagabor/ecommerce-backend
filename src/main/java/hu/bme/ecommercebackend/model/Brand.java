@@ -19,12 +19,11 @@ public class Brand {
 
     private String name;
 
-    @OneToOne
-    private Image image;
+    private String image;
 
     private String description;
 
-    public Brand(String name, Image image, String description) {
+    public Brand(String name, String image, String description) {
         this.name = name;
         this.image = image;
         this.description = description;

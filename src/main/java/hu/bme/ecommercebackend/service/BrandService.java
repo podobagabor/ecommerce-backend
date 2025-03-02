@@ -3,9 +3,7 @@ package hu.bme.ecommercebackend.service;
 import hu.bme.ecommercebackend.dto.Brand.BrandCreateDto;
 import hu.bme.ecommercebackend.dto.Brand.BrandDto;
 import hu.bme.ecommercebackend.model.Brand;
-import hu.bme.ecommercebackend.model.Image;
 import hu.bme.ecommercebackend.repository.BrandRepository;
-import jakarta.persistence.Entity;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,9 +23,9 @@ public class BrandService {
     }
 
     public BrandDto createBrand(BrandCreateDto brandCreateDto, MultipartFile image) {
-        Image imageEntity = this.imageService.saveImage(image);
+        String imageEntity = this.imageService.saveImage(image);
         Brand brandEntity = brandRepository.save(new Brand(brandCreateDto.getName(), imageEntity, brandCreateDto.getDescription()));
-        return new BrandDto(brandEntity.getId(), brandEntity.getImage().getImageUrl(), brandEntity.getDescription(), brandEntity.getName());
+        return new BrandDto(brandEntity.getId(), brandEntity.getImage(), brandEntity.getDescription(), brandEntity.getName());
     }
 
     public List<BrandDto> getBrandList() {
@@ -43,7 +41,7 @@ public class BrandService {
 
     public String deleteBrand(Long id) {
         Brand brandEntity = brandRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Unknown entity"));
-        imageService.deleteImageFromStorage(brandEntity.getImage().getImageUrl());
+        imageService.deleteImageFromStorage(brandEntity.getImage());
         brandRepository.deleteById(id);
         return "Successful deleting";
     }
@@ -58,10 +56,10 @@ public class BrandService {
 
     public BrandDto modifyImage(Long id, MultipartFile multipartFile) {
         Brand brandEntity = brandRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Unknown entity"));
-        if (!Objects.equals(imageService.deleteImage(brandEntity.getImage().getId()), "Success")) {
+        if (!Objects.equals(imageService.deleteImage(brandEntity.getImage()), "Success")) {
             throw new RuntimeException("Delete failed");
         }
-        Image imageEntity = imageService.saveImage(multipartFile);
+        String imageEntity = imageService.saveImage(multipartFile);
         brandEntity.setImage(imageEntity);
         return new BrandDto(brandRepository.save(brandEntity));
     }
