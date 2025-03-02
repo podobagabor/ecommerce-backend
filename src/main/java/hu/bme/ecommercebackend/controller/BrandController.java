@@ -32,7 +32,7 @@ public class BrandController {
 
     @GetMapping("/{id}")
     public ResponseEntity<BrandDto> getBrandById(@PathVariable Long id) {
-        return ResponseEntity.ok(brandService.getBrandById(id));
+        return ResponseEntity.ok(brandService.getBrandDtoById(id));
     }
 
     @DeleteMapping("/delete/{id}")

@@ -34,9 +34,12 @@ public class BrandService {
         ).collect(Collectors.toList());
     }
 
-    public BrandDto getBrandById(Long id) {
-        Brand brandEntity = brandRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Unknown entity"));
-        return new BrandDto(brandEntity);
+    public BrandDto getBrandDtoById(Long id) {
+        return new BrandDto(getBrandById(id));
+    }
+
+    public Brand getBrandById(Long id) {
+        return brandRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Unknown entity"));
     }
 
     public String deleteBrand(Long id) {

@@ -19,9 +19,12 @@ public class CategoryService {
         this.categoryRepository = categoryRepository;
     }
 
-    public CategoryDto getCategoryById(Long id) {
-        Category temp = categoryRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Not found"));
-        return new CategoryDto(temp);
+    public CategoryDto getCategoryDtoById(Long id) {
+        return new CategoryDto(getCategoryById(id));
+    }
+
+    public Category getCategoryById(Long id) {
+        return categoryRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Not found"));
     }
 
     public List<CategoryDto> getCategories() {
