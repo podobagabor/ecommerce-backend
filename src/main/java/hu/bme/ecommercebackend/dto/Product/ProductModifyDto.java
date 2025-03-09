@@ -1,19 +1,21 @@
 package hu.bme.ecommercebackend.dto.Product;
 
+import hu.bme.ecommercebackend.dto.Brand.BrandDto;
+import hu.bme.ecommercebackend.dto.Category.CategoryDto;
 import lombok.Getter;
-import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
 @Getter
-@Setter
-public class ProductCreateDto {
+public class ProductModifyDto {
+    private Long id;
     private String name;
     private Integer count;
     private String description;
     private Integer discountPercentage;
-    private List<MultipartFile> images;
+    private List<ImageModifyDto> images;
+    private List<MultipartFile> newImages;
     private Integer price;
     private Long categoryId;
     private Long brandId;
