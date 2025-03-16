@@ -28,4 +28,11 @@ public class Brand {
         this.image = image;
         this.description = description;
     }
+
+    public Brand(Long id, String name, String image, String description) {
+        this.id = id;
+        this.name = name;
+        this.image = image;
+        this.description = description;
+    }
 }

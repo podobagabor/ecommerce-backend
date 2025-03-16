@@ -41,8 +41,16 @@ public class ProductService {
         ).collect(Collectors.toList());
     }
 
-    public ProductDto getProductById(Long id) {
-        return new ProductDto(productRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Unknown entity")));
+    public ProductDto getProductDtoById(Long id) {
+        return new ProductDto(getProductById(id));
+    }
+
+    public Product getProductById(Long id) {
+        return productRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Unknown entity"));
+    }
+
+    public Product getProductReferenceById(Long id) {
+        return productRepository.getReferenceById(id) ;
     }
 
     public String deleteProductId(Long id) {

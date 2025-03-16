@@ -42,11 +42,11 @@ public class BrandService {
         return brandRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Unknown entity"));
     }
 
-    public String deleteBrand(Long id) {
+    public Boolean deleteBrand(Long id) {
         Brand brandEntity = brandRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Unknown entity"));
-        imageService.deleteImageFromStorage(brandEntity.getImage());
+        imageService.deleteImage(brandEntity.getImage());
         brandRepository.deleteById(id);
-        return "Successful deleting";
+        return true;
     }
 
     public BrandDto modifyBrand(BrandDto brandDto) {
@@ -59,9 +59,7 @@ public class BrandService {
 
     public BrandDto modifyImage(Long id, MultipartFile multipartFile) {
         Brand brandEntity = brandRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Unknown entity"));
-        if (!Objects.equals(imageService.deleteImage(brandEntity.getImage()), "Success")) {
-            throw new RuntimeException("Delete failed");
-        }
+        imageService.deleteImage(brandEntity.getImage());
         String imageEntity = imageService.saveImage(multipartFile);
         brandEntity.setImage(imageEntity);
         return new BrandDto(brandRepository.save(brandEntity));

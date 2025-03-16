@@ -66,8 +66,8 @@ public class CategoryService {
         return new CategoryDto(categoryEntity);
     }
 
-    public String deleteCategoryWithId(Long id) {
+    public Boolean deleteCategoryWithId(Long id) {
         categoryRepository.deleteById(id);
-        return "Successful deleting";
+        return true;
     }
 }

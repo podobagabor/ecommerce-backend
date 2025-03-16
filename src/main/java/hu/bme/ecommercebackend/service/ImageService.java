@@ -20,37 +20,31 @@ public class ImageService {
     }
 
     public String saveImage(MultipartFile image) {
-        try {
-            String uplodDir = "files/";
-            Files.createDirectories(Paths.get(uplodDir));
+        if(image != null) {
+            try {
+                String uplodDir = "files/";
+                Files.createDirectories(Paths.get(uplodDir));
 
-            String fileName = UUID.randomUUID() + "-" + image.getOriginalFilename();
-            Path filePath = Paths.get(uplodDir + fileName);
-            Files.copy(image.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-            return "files/" + fileName;
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+                String fileName = UUID.randomUUID() + "-" + image.getOriginalFilename();
+                Path filePath = Paths.get(uplodDir + fileName);
+                Files.copy(image.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+                return "files/" + fileName;
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
+        return "";
     }
 
-    public String deleteImage(String url) {
-        try {
-            Path filePath = Paths.get("files", url);
-            Files.deleteIfExists(filePath);
-        } catch (Exception e) {
-            throw new RuntimeException("Delete failed: " + url, e);
+    public void deleteImage(String url) {
+        if(url != null) {
+            try {
+                Path filePath = Paths.get("files", url);
+                Files.deleteIfExists(filePath);
+            } catch (Exception e) {
+                throw new RuntimeException("Delete failed: " + url, e);
+            }
         }
-        return "Success";
-    }
-
-    public String deleteImageFromStorage(String url) {
-        try {
-            Path filePath = Paths.get(url);
-            Files.deleteIfExists(filePath);
-        } catch (Exception e) {
-            throw new RuntimeException("Delete failed: " + url, e);
-        }
-        return "Success";
     }
 
     public void resetFiles() {

@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Getter
@@ -32,5 +33,16 @@ public class CategoryDto {
             this.parentCategoryId = null;
         }
         this.subCategoryIds = category.getSubCategories().stream().map(Category::getId).collect(Collectors.toList());
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(this == obj) {
+            return true;
+        }
+        if(obj == null || obj.getClass() != this.getClass()) {
+            return false;
+        }
+        return (Objects.equals(this.id, ((CategoryDto) obj).getId()) && Objects.equals(this.name,((CategoryDto) obj).getName()) && Objects.equals(this.subCategoryIds,((CategoryDto) obj).getSubCategoryIds()) && Objects.equals(this.parentCategoryId,((CategoryDto) obj).getParentCategoryId()));
     }
 }
