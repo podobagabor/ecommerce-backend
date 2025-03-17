@@ -18,7 +18,6 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
@@ -48,11 +47,10 @@ public class CategoryServiceTest {
 
         List<CategoryDto> categories = categoryService.getCategories();
 
-        assertEquals(2, categories.size());
-        assertEquals("Ruházat", categories.get(0).getName());
-        assertEquals("Pólók", categories.get(1).getName());
-        assertEquals(1L, categories.get(1).getParentCategoryId());
-        assertEquals(2L, categories.get(0).getSubCategoryIds().get(0));
+        assertEquals(mockCategories.size(), categories.size());
+        for (int i = 0; i < categories.size(); i++) {
+            assertEquals(categories.get(i), new CategoryDto(mockCategories.get(i)));
+        }
     }
 
     @Test
@@ -92,25 +90,25 @@ public class CategoryServiceTest {
 
     @Test
     void testCreateCategoryDto() {
-        when(categoryRepository.save(any(Category.class))).thenReturn(mockCategory2);
+        Category mockCategoryWithoutId = new Category(null, mockCategory2.getName(), mockCategory2.getSubCategories(), mockCategory2.getParentCategory());
+        when(categoryRepository.save(mockCategoryWithoutId)).thenReturn(mockCategoryWithoutId);
         when(categoryRepository.findById(mockCategory1.getId())).thenReturn(Optional.ofNullable(mockCategory1));
         when(categoryRepository.findAllById(mockCategory2.getSubCategories().stream().map(Category::getId).toList())).thenReturn(new ArrayList<>());
         CategoryDto category = categoryService.createCategoryDto(new CategoryCreateDto(
                 mockCategory2.getName(), mockCategory2.getSubCategories().stream().map(Category::getId).toList(), mockCategory2.getParentCategory() != null ? mockCategory2.getParentCategory().getId() : null
         ));
+        assertEquals(new CategoryDto(mockCategoryWithoutId), category);
 
-        assertEquals(new CategoryDto(mockCategory2), category);
     }
 
     @Test
     void testModifyCategory() {
         Category mockModifiedCategory = new Category(mockCategory2.getId(), mockCategory2.getName() + " - new", mockCategory2.getSubCategories(), mockCategory2.getParentCategory());
-        CategoryDto mockModifiedCategoryDto = new CategoryDto(mockModifiedCategory);
         when(categoryRepository.save(mockModifiedCategory)).thenReturn(mockModifiedCategory);
         when(categoryRepository.findById(mockCategory1.getId())).thenReturn(Optional.ofNullable(mockCategory1));
 
-        CategoryDto modifiedCategoryDto = categoryService.modifyCategory(mockModifiedCategoryDto);
-        assertEquals(modifiedCategoryDto, mockModifiedCategoryDto);
+        CategoryDto modifiedCategoryDto = categoryService.modifyCategory(new CategoryDto(mockModifiedCategory));
+        assertEquals(modifiedCategoryDto, new CategoryDto(mockModifiedCategory));
     }
 
     @Test

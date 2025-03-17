@@ -59,6 +59,6 @@ public class Category {
         if(obj == null || obj.getClass() != this.getClass()) {
             return false;
         }
-        return (Objects.equals(this.id, ((Category) obj).id) && Objects.equals(this.name,((Category) obj).getName()) && Objects.equals(this.subCategories,((Category) obj).getSubCategories()) && Objects.equals(this.parentCategory,((Category) obj).getParentCategory()));
+        return (Objects.equals(this.id, ((Category) obj).getId()) && Objects.equals(this.name,((Category) obj).getName()));
     }
 }
