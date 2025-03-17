@@ -66,6 +66,7 @@ public class ProductService {
         Category categoryEntity = categoryService.getCategoryById(productCreateDto.getCategoryId());
         Brand brandEntity = brandService.getBrandById(productCreateDto.getBrandId());
         return new ProductDto(productRepository.save(new Product(
+                null,
                 productCreateDto.getName(),
                 productCreateDto.getCount(),
                 productCreateDto.getDescription(),

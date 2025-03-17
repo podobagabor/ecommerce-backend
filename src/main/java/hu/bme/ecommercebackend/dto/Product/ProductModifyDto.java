@@ -1,12 +1,12 @@
 package hu.bme.ecommercebackend.dto.Product;
 
-import hu.bme.ecommercebackend.dto.Brand.BrandDto;
-import hu.bme.ecommercebackend.dto.Category.CategoryDto;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
+@AllArgsConstructor
 @Getter
 public class ProductModifyDto {
     private Long id;
