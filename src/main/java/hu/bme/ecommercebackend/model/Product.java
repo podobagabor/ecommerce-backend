@@ -8,6 +8,7 @@ import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Getter
 @Entity
@@ -54,5 +55,48 @@ public class Product {
         this.images = images;
         this.price = price;
         this.count = count;
+    }
+
+    public Product(
+            Long id,
+            String name,
+            Integer count,
+            String description,
+            Integer discountPercentage,
+            List<String> images,
+            Integer price,
+            Category category,
+            Brand brand
+    ) {
+        this.id = id;
+        this.brand = brand;
+        this.name = name;
+        this.category = category;
+        this.description = description;
+        this.discountPercentage = discountPercentage;
+        this.images = images;
+        this.price = price;
+        this.count = count;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || obj.getClass() != this.getClass()) {
+            return false;
+        }
+        return (
+                        Objects.equals(this.id, ((Product) obj).getId()) &&
+                        Objects.equals(this.name, ((Product) obj).getName()) &&
+                        Objects.equals(this.description, ((Product) obj).getDescription()) &&
+                        Objects.equals(this.brand, ((Product) obj).getBrand()) &&
+                        Objects.equals(this.category, ((Product) obj).getCategory()) &&
+                        Objects.equals(this.count, ((Product) obj).getCount()) &&
+                        Objects.equals(this.price, ((Product) obj).getPrice()) &&
+                        Objects.equals(this.images, ((Product) obj).getImages()) &&
+                        Objects.equals(this.discountPercentage, ((Product) obj).getDiscountPercentage())
+        );
     }
 }

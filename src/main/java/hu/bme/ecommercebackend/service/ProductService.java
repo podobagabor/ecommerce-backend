@@ -53,9 +53,9 @@ public class ProductService {
         return productRepository.getReferenceById(id) ;
     }
 
-    public String deleteProductId(Long id) {
+    public Boolean deleteProductById(Long id) {
         productRepository.deleteById(id);
-        return "Successful deleting";
+        return true;
     }
 
     public ProductDto createProduct(ProductCreateDto productCreateDto) {

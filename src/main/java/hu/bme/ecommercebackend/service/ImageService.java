@@ -14,7 +14,6 @@ import java.util.stream.Stream;
 @Service
 public class ImageService {
 
-
     public ImageService() {
         resetFiles();
     }

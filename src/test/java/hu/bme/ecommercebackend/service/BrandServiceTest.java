@@ -25,7 +25,7 @@ public class BrandServiceTest {
     private BrandRepository brandRepository;
 
     @Mock
-    ImageService imageService;
+    private ImageService imageService;
 
     @InjectMocks
     private BrandService brandService;

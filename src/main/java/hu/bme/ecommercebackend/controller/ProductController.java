@@ -43,8 +43,8 @@ public class ProductController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<String> deleteProduct(@PathVariable Long id) {
-        return ResponseEntity.ok(productService.deleteProductId(id));
+    public ResponseEntity<Boolean> deleteProduct(@PathVariable Long id) {
+        return ResponseEntity.ok(productService.deleteProductById(id));
     }
 
     @PutMapping("reduce/{id}/{count}")

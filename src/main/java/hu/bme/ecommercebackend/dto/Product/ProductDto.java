@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
+import java.util.Objects;
 
 @Getter
 @NoArgsConstructor
@@ -33,6 +34,21 @@ public class ProductDto {
         this.category = new CategoryDto(product.getCategory());
         this.discountPercentage = product.getDiscountPercentage();
         this.images = product.getImages();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(this == obj) return true;
+        if(obj == null || obj.getClass() != this.getClass()) return false;
+        return (Objects.equals(this.id, ((ProductDto) obj).getId()) &&
+                Objects.equals(this.name, ((ProductDto) obj).getName()) &&
+                Objects.equals(this.description, ((ProductDto) obj).getDescription()) &&
+                Objects.equals(this.brand, ((ProductDto) obj).getBrand()) &&
+                Objects.equals(this.count, ((ProductDto) obj).getCount()) &&
+                Objects.equals(this.price, ((ProductDto) obj).getPrice()) &&
+                Objects.equals(this.category, ((ProductDto) obj).getCategory()) &&
+                Objects.equals(this.discountPercentage, ((ProductDto) obj).getDiscountPercentage()) &&
+                Objects.equals(this.images, ((ProductDto) obj).getImages()));
     }
 }
 
