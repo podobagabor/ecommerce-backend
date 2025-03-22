@@ -142,26 +142,26 @@ public class ProductServiceTest {
         assertEquals(productDto.getId(), mockProduct1.getId());
         assertEquals(productDto.getCount(), mockProduct1.getCount() + 1);
     }
-    
+
     @Test
     void testModifyProduct() {
         Category mockCategory2 = new Category(2L, "Pólók", new ArrayList<>(), mockCategory1);
         Brand mockBrand2 = new Brand(2L, "Sony", "image_url", "Technical devices from Japan");
-        Product modifiedMockProduct = new Product(null,mockProduct1.getName() + " - new",null,null,null,null,null,mockCategory2,mockBrand2,mockProduct1);
+        Product modifiedMockProduct = new Product(null, mockProduct1.getName() + " - new", null, null, null, null, null, mockCategory2, mockBrand2, mockProduct1);
         ProductModifyDto mockProductCreateDto = new ProductModifyDto(
-                modifiedMockProduct.getId(),modifiedMockProduct.getName(),modifiedMockProduct.getCount(),
-                modifiedMockProduct.getDescription(),modifiedMockProduct.getDiscountPercentage(),new ArrayList<>(),
-                new ArrayList<>(),modifiedMockProduct.getPrice(),modifiedMockProduct.getCategory().getId(),modifiedMockProduct.getBrand().getId()
+                modifiedMockProduct.getId(), modifiedMockProduct.getName(), modifiedMockProduct.getCount(),
+                modifiedMockProduct.getDescription(), modifiedMockProduct.getDiscountPercentage(), new ArrayList<>(),
+                new ArrayList<>(), modifiedMockProduct.getPrice(), modifiedMockProduct.getCategory().getId(), modifiedMockProduct.getBrand().getId()
         );
         when(productRepository.findById(mockProduct1.getId())).thenReturn(Optional.ofNullable(mockProduct1));
         when(productRepository.save(modifiedMockProduct)).thenReturn(modifiedMockProduct);
         when(categoryService.getCategoryById(mockCategory2.getId())).thenReturn(mockCategory2);
         when(brandService.getBrandById(mockBrand2.getId())).thenReturn(mockBrand2);
         //Todo: image handling
-        
+
         ProductDto modifiedProduct = productService.modifyProduct(mockProductCreateDto);
-        
-        assertEquals(modifiedProduct,new ProductDto(modifiedMockProduct));
+
+        assertEquals(modifiedProduct, new ProductDto(modifiedMockProduct));
     }
 
 

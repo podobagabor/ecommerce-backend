@@ -6,6 +6,8 @@ import hu.bme.ecommercebackend.model.enums.Role;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Objects;
+
 @Getter
 @Setter
 public class UserDto {
@@ -24,8 +26,16 @@ public class UserDto {
         this.email = user.getEmail();
         this.id = user.getId();
         this.role = user.getRole();
-        this.firsName = user.getFirsName();
+        this.firsName = user.getFirstName();
         this.lastName = user.getLastName();
         this.savedNumber = user.getSavedProducts().size();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        UserDto userDto = (UserDto) o;
+        return Objects.equals(id, userDto.id) && role == userDto.role && Objects.equals(email, userDto.email) && Objects.equals(firsName, userDto.firsName) && Objects.equals(lastName, userDto.lastName) && Objects.equals(savedNumber, userDto.savedNumber) && Objects.equals(cartNumber, userDto.cartNumber) && Objects.equals(address, userDto.address);
     }
 }

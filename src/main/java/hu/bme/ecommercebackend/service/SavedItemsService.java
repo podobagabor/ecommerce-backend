@@ -8,7 +8,7 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Set;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,18 +28,18 @@ public class SavedItemsService {
     public Integer addProductToSaved(Long productId, String userId) {
         User userEntity = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("Unknown entity"));
         Product productReference = productService.getProductReferenceById(productId);
-        if(productReference == null) {
+        if (productReference == null) {
             throw new EntityNotFoundException("Unknown entity");
         }
         userEntity.getSavedProducts().add(productReference);
-        userRepository.save(userEntity);
-        return  userEntity.getSavedProducts().size();
+        userEntity = userRepository.save(userEntity);
+        return userEntity.getSavedProducts().size();
     }
 
     public Integer removeProductFromSaved(Long productId, String userId) {
         User userEntity = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("Unknown entity"));
-        Set<Product> newSavedList = userEntity.getSavedProducts().stream().filter(product ->  !product.getId().equals(productId)).collect(Collectors.toSet());
-        userEntity.setSavedProducts(newSavedList);
+        userEntity.getSavedProducts().removeIf(product -> Objects.equals(product.getId(), productId));
+        userEntity = userRepository.save(userEntity);
         return userEntity.getSavedProducts().size();
     }
 }
