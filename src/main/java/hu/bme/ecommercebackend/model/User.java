@@ -36,6 +36,9 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CartElement> cart = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Order> orders = new ArrayList<>();
+
     @Embedded
     @Setter
     private Address address;
@@ -49,6 +52,7 @@ public class User {
         this.lastName = user.getLastName();
         this.savedProducts = new HashSet<>();
         this.cart = new ArrayList<>();
+        this.orders = new ArrayList<>();
     }
 
     public User(User user) {
@@ -60,6 +64,7 @@ public class User {
         this.lastName = user.getLastName();
         this.savedProducts = user.getSavedProducts().stream().map(Product::new).collect(Collectors.toSet());
         this.cart = user.getCart().stream().map(CartElement::new).collect(Collectors.toList());
+        this.orders = user.getOrders().stream().map(Order::new).collect(Collectors.toList());
     }
 
     @Override
@@ -67,7 +72,6 @@ public class User {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return Objects.equals(id, user.id) && role == user.role && Objects.equals(email, user.email) && Objects.equals(firstName, user.firstName) && Objects.equals(lastName, user.lastName) && Objects.equals(new HashSet<>(savedProducts), new HashSet<>(user.savedProducts)) && Objects.equals(cart, user.cart) && Objects.equals(address, user.address);
+        return Objects.equals(id, user.id) && role == user.role && Objects.equals(email, user.email) && Objects.equals(firstName, user.firstName) && Objects.equals(lastName, user.lastName) && Objects.equals(savedProducts, user.savedProducts) && Objects.equals(cart, user.cart) && Objects.equals(orders, user.orders) && Objects.equals(address, user.address);
     }
-
 }
