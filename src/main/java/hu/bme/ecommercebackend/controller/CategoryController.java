@@ -21,8 +21,7 @@ public class CategoryController {
     }
 
     @GetMapping("/list")
-    public ResponseEntity<List<CategoryDto>> getAllCategories(@AuthenticationPrincipal Jwt jwt) {
-        String userId = jwt.getSubject();
+    public ResponseEntity<List<CategoryDto>> getAllCategories() {
         return ResponseEntity.ok(categoryService.getCategories());
     }
 

@@ -22,7 +22,7 @@ public class SavedItemsService {
     }
 
     public List<ProductDto> getSavedItemsOfUser(String userId) {
-        return userRepository.findSavedProductsById(userId).stream().map(ProductDto::new).collect(Collectors.toList());
+        return userRepository.findSavedProductsByUser_Id(userId).stream().map(ProductDto::new).collect(Collectors.toList());
     }
 
     public Integer addProductToSaved(Long productId, String userId) {

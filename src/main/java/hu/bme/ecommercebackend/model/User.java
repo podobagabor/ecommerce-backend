@@ -21,6 +21,7 @@ public class User {
     @Id
     private String id;
 
+    @Enumerated(EnumType.STRING)
     private Role role;
     @Setter
     private String email;
@@ -33,7 +34,8 @@ public class User {
     @Setter
     private Set<Product> savedProducts;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Setter
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL,orphanRemoval = true)
     private List<CartElement> cart = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)

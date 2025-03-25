@@ -10,10 +10,12 @@ import java.util.Objects;
 @Getter
 @Setter
 public class CartElementDto {
+    private Long id;
     private ProductDto productDto;
     private Integer quantity;
 
     public CartElementDto(CartElement cartElement) {
+        this.id = cartElement.getId();
         this.productDto = new ProductDto(cartElement.getProduct());
         this.quantity = cartElement.getQuantity();
     }

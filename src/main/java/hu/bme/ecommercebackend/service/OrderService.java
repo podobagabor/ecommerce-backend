@@ -2,16 +2,16 @@ package hu.bme.ecommercebackend.service;
 
 import hu.bme.ecommercebackend.dto.Order.OrderCreateDto;
 import hu.bme.ecommercebackend.dto.Order.OrderDto;
-import hu.bme.ecommercebackend.model.Address;
-import hu.bme.ecommercebackend.model.Order;
-import hu.bme.ecommercebackend.model.OrderItem;
-import hu.bme.ecommercebackend.model.User;
+import hu.bme.ecommercebackend.model.*;
 import hu.bme.ecommercebackend.model.enums.OrderStatus;
+import hu.bme.ecommercebackend.repository.CartRepository;
 import hu.bme.ecommercebackend.repository.OrderItemRepository;
 import hu.bme.ecommercebackend.repository.OrderRepository;
+import hu.bme.ecommercebackend.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,22 +21,25 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final OrderItemRepository orderItemRepository;
     private final UserService userService;
+    private final UserRepository userRepository;
+    private final CartRepository cartRepository;
 
-    public OrderService(OrderRepository orderRepository, OrderItemRepository orderItemRepository, UserService userService) {
+    public OrderService(OrderRepository orderRepository, OrderItemRepository orderItemRepository, UserService userService, UserRepository userRepository,
+                        CartRepository cartRepository) {
         this.orderItemRepository = orderItemRepository;
         this.orderRepository = orderRepository;
         this.userService = userService;
+        this.userRepository = userRepository;
+        this.cartRepository = cartRepository;
     }
 
     public OrderDto createOrder(String userId, OrderCreateDto orderCreateDto) {
         User userEntity = userService.getUserById(userId);
-        Order order = new Order();
+        Order order = new Order(userEntity,new ArrayList<>(),orderCreateDto.getBillingAddress(),orderCreateDto.getShippingAddress());
         List<OrderItem> orderItems = userEntity.getCart().stream().map(cartElement -> new OrderItem(cartElement, order)).toList();
         order.setItems(orderItems);
-        order.setBillingAddress(orderCreateDto.getBillingAddress());
-        order.setShippingAddress(orderCreateDto.getShippingAddress());
-        order.setUser(userEntity);
-        order.setStatus(OrderStatus.INIT);
+        userEntity.getCart().clear();
+        userRepository.save(userEntity);
         return new OrderDto(orderRepository.save(order));
     }
 

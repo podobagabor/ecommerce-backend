@@ -34,8 +34,8 @@ public class UserServiceTest {
         Brand mockBrand1 = new Brand(1L, "Samsung", "image_url", "Technical devices from Korea");
         Product mockProduct1 = new Product(1L, "Test poduct1", 2, "Teszt description1", null, Arrays.asList("TestUrl11", "TestUrl21"), 100, mockCategory1, mockBrand1);
         Product mockProduct2 = new Product(2L, "Test poduct2", 2, "Teszt description2", 10, Arrays.asList("TestUrl12", "TestUrl22"), 100, mockCategory1, mockBrand1);
-        mockUser1 = new User("asdf", Role.USER,"testEmail1@email.com","Test1First","Test1Last", Set.of(mockProduct1), new ArrayList<>(),new Address("HU","Dabas","Temető utca","23","2371"));
-        mockUser2 = new User("fdsa", Role.ADMIN,"testEmail2@email.com","Test2First","Test2Last", Set.of(mockProduct1), new ArrayList<>(),new Address("HU","Dabas","Temető utca","23","2371"));
+        mockUser1 = new User("asdf", Role.USER,"testEmail1@email.com","Test1First","Test1Last", Set.of(mockProduct1), new ArrayList<>(), new ArrayList<>(),new Address("HU","Dabas","Temető utca","23","2371"));
+        mockUser2 = new User("fdsa", Role.ADMIN,"testEmail2@email.com","Test2First","Test2Last", Set.of(mockProduct1), new ArrayList<>(), new ArrayList<>(),new Address("HU","Dabas","Temető utca","23","2371"));
         CartElement mockCartElement1 = new CartElement(mockProduct2,2,mockUser1);
         CartElement mockCartElement2 = new CartElement(mockProduct2,2,mockUser2);
         mockUser1.getCart().add(mockCartElement1);
@@ -72,7 +72,7 @@ public class UserServiceTest {
 
     @Test
     void testCreateUser() {
-        User mockUser = new User("asdf", Role.USER,"testEmail1@email.com","Test1First","Test1Last", Set.of(), List.of(),new Address("HU","Dabas","Temető utca","23","2371"));;
+        User mockUser = new User("asdf", Role.USER,"testEmail1@email.com","Test1First","Test1Last", Set.of(), new ArrayList<>(), new ArrayList<>(),new Address("HU","Dabas","Temető utca","23","2371"));;
         when(userRepository.save(mockUser)).thenReturn(mockUser);
         UserCreateDto userCreateDto = new UserCreateDto(mockUser1.getId(),mockUser1.getRole(),mockUser1.getEmail(),mockUser1.getFirstName(),mockUser1.getLastName(),mockUser1.getAddress());
 
@@ -96,7 +96,7 @@ public class UserServiceTest {
 
     @Test
     void testModifyUser() {
-        User modifiedUser = new User(mockUser1.getId(),mockUser1.getRole(),mockUser1.getEmail() + " - new",mockUser1.getFirstName() + " - new",mockUser1.getLastName() + " - new",mockUser1.getSavedProducts(),mockUser1.getCart(),mockUser1.getAddress());
+        User modifiedUser = new User(mockUser1.getId(),mockUser1.getRole(),mockUser1.getEmail() + " - new",mockUser1.getFirstName() + " - new",mockUser1.getLastName() + " - new",mockUser1.getSavedProducts(),mockUser1.getCart(),mockUser1.getOrders(),mockUser1.getAddress());
         when(userRepository.findById(mockUser1.getId())).thenReturn(Optional.ofNullable(mockUser1));
         when(userRepository.save(modifiedUser)).thenReturn(modifiedUser);
 

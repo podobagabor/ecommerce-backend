@@ -12,6 +12,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
@@ -38,14 +39,14 @@ public class SavedItemsServiceTest {
         Brand mockBrand1 = new Brand(1L, "Samsung", "image_url", "Technical devices from Korea");
         mockProduct1 = new Product(1L, "Test poduct1", 2, "Teszt description1", null, Arrays.asList("TestUrl11", "TestUrl21"), 100, mockCategory1, mockBrand1);
         Product mockProduct2 = new Product(2L, "Test poduct2", 2, "Teszt description2", 10, Arrays.asList("TestUrl12", "TestUrl22"), 100, mockCategory1, mockBrand1);
-        mockUser1 = new User("asdf", Role.USER, "testEmail1@email.com", "Test1First", "Test1Last", new HashSet<>(Set.of(mockProduct1, mockProduct2)), List.of(), new Address("HU", "Dabas", "Temető utca", "23", "2371"));
-        mockUser2 = new User("fdsa", Role.ADMIN, "testEmail2@email.com", "Test2First", "Test2Last", new HashSet<>(Set.of(mockProduct2)), List.of(), new Address("HU", "Dabas", "Temető utca", "23", "2371"));
+        mockUser1 = new User("asdf", Role.USER, "testEmail1@email.com", "Test1First", "Test1Last", new HashSet<>(Set.of(mockProduct1, mockProduct2)), new ArrayList<>(), new ArrayList<>(), new Address("HU", "Dabas", "Temető utca", "23", "2371"));
+        mockUser2 = new User("fdsa", Role.ADMIN, "testEmail2@email.com", "Test2First", "Test2Last", new HashSet<>(Set.of(mockProduct2)), new ArrayList<>() , new ArrayList<>(), new Address("HU", "Dabas", "Temető utca", "23", "2371"));
 
     }
 
     @Test
     void testGetSavedItemsOfUser() {
-        when(userRepository.findSavedProductsById(mockUser1.getId())).thenReturn(mockUser1.getSavedProducts().stream().toList());
+        when(userRepository.findSavedProductsById(mockUser1.getId())).thenReturn(new HashSet<>(mockUser1.getSavedProducts()));
         List<Product> mockSavedProduct = mockUser1.getSavedProducts().stream().toList();
 
         List<ProductDto> savedProducts = savedItemsService.getSavedItemsOfUser(mockUser1.getId());
@@ -58,7 +59,7 @@ public class SavedItemsServiceTest {
 
     @Test
     void testAddProductToSaved() {
-        User modifiedMockUser = new User(mockUser2.getId(), mockUser2.getRole(), mockUser2.getEmail(), mockUser2.getFirstName(), mockUser2.getLastName(), mockUser2.getSavedProducts(), mockUser2.getCart(), mockUser2.getAddress());
+        User modifiedMockUser = new User(mockUser2.getId(), mockUser2.getRole(), mockUser2.getEmail(), mockUser2.getFirstName(), mockUser2.getLastName(), mockUser2.getSavedProducts(), mockUser2.getCart(),mockUser2.getOrders(), mockUser2.getAddress());
         Set<Product> newSet = new HashSet<Product>(mockUser2.getSavedProducts());
         newSet.add(mockProduct1);
         modifiedMockUser.setSavedProducts(Set.copyOf(newSet));
@@ -73,7 +74,7 @@ public class SavedItemsServiceTest {
 
     @Test
     void testRemoveProductToSaved() {
-        User mockUser = new User(mockUser2.getId(), mockUser2.getRole(), mockUser2.getEmail(), mockUser2.getFirstName(), mockUser2.getLastName(), mockUser2.getSavedProducts(), mockUser2.getCart(), mockUser2.getAddress());
+        User mockUser = new User(mockUser2.getId(), mockUser2.getRole(), mockUser2.getEmail(), mockUser2.getFirstName(), mockUser2.getLastName(), mockUser2.getSavedProducts(), mockUser2.getCart(),mockUser2.getOrders() ,mockUser2.getAddress());
         Set<Product> newSet = new HashSet<Product>(mockUser2.getSavedProducts());
         newSet.add(mockProduct1);
         mockUser.setSavedProducts(newSet);

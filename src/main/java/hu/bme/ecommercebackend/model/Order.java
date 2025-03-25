@@ -15,6 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
+@Table(name = "orders")
 public class Order {
     @Id
     @GeneratedValue
@@ -28,9 +29,23 @@ public class Order {
     User user;
 
     @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name = "city", column = @Column(name = "billing_city")),
+            @AttributeOverride(name = "street", column = @Column(name = "billing_street")),
+            @AttributeOverride(name = "country", column = @Column(name = "billing_country")),
+            @AttributeOverride(name = "number", column = @Column(name = "billing_number")),
+            @AttributeOverride(name = "postalCode", column = @Column(name = "billing_postalCode"))
+    })
     Address billingAddress;
 
     @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name = "city", column = @Column(name = "shipping_city")),
+            @AttributeOverride(name = "street", column = @Column(name = "shipping_street")),
+            @AttributeOverride(name = "country", column = @Column(name = "shipping_country")),
+            @AttributeOverride(name = "number", column = @Column(name = "shipping_number")),
+            @AttributeOverride(name = "postalCode", column = @Column(name = "shipping_postalCode"))
+    })
     Address shippingAddress;
 
     OrderStatus status;
@@ -42,5 +57,13 @@ public class Order {
         this.billingAddress = order.getBillingAddress();
         this.shippingAddress = order.getShippingAddress();
         this.status = order.getStatus();
+    }
+
+    public Order(User user,List<OrderItem> items, Address billingAddress,Address shippingAddress) {
+        this.user = user;
+        this.items = items;
+        this.billingAddress = billingAddress;
+        this.shippingAddress = shippingAddress;
+        this.status = OrderStatus.INIT;
     }
 }
