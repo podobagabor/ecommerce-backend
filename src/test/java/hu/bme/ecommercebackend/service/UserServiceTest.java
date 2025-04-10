@@ -74,7 +74,7 @@ public class UserServiceTest {
     void testCreateUser() {
         User mockUser = new User("asdf", Role.USER,"testEmail1@email.com","Test1First","Test1Last", Set.of(), new ArrayList<>(), new ArrayList<>(),new Address("HU","Dabas","Temető utca","23","2371"));;
         when(userRepository.save(mockUser)).thenReturn(mockUser);
-        UserCreateDto userCreateDto = new UserCreateDto(mockUser1.getId(),mockUser1.getRole(),mockUser1.getEmail(),mockUser1.getFirstName(),mockUser1.getLastName(),mockUser1.getAddress());
+        UserCreateDto userCreateDto = new UserCreateDto(mockUser1.getId(),mockUser1.getRole(),mockUser1.getEmail(),mockUser1.getFirstName(),mockUser1.getLastName(),mockUser1.getAddress(),"password");
 
         UserDto user = userService.createUser(userCreateDto);
 

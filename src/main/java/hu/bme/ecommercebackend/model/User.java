@@ -1,6 +1,7 @@
 package hu.bme.ecommercebackend.model;
 
 import hu.bme.ecommercebackend.dto.User.UserCreateDto;
+import hu.bme.ecommercebackend.model.enums.Gender;
 import hu.bme.ecommercebackend.model.enums.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -24,6 +25,7 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role;
     @Setter
+    @Column(unique = true)
     private String email;
     @Setter
     private String firstName;
@@ -33,6 +35,8 @@ public class User {
     @ManyToMany
     @Setter
     private Set<Product> savedProducts;
+
+    private Gender gender;
 
     @Setter
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL,orphanRemoval = true)
@@ -55,6 +59,7 @@ public class User {
         this.savedProducts = new HashSet<>();
         this.cart = new ArrayList<>();
         this.orders = new ArrayList<>();
+        this.gender = user.getGender();
     }
 
     public User(User user) {
@@ -67,6 +72,7 @@ public class User {
         this.savedProducts = user.getSavedProducts().stream().map(Product::new).collect(Collectors.toSet());
         this.cart = user.getCart().stream().map(CartElement::new).collect(Collectors.toList());
         this.orders = user.getOrders().stream().map(Order::new).collect(Collectors.toList());
+        this.gender = user.getGender();
     }
 
     @Override
@@ -74,6 +80,11 @@ public class User {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return Objects.equals(id, user.id) && role == user.role && Objects.equals(email, user.email) && Objects.equals(firstName, user.firstName) && Objects.equals(lastName, user.lastName) && Objects.equals(savedProducts, user.savedProducts) && Objects.equals(cart, user.cart) && Objects.equals(orders, user.orders) && Objects.equals(address, user.address);
+        return Objects.equals(id, user.id) && role == user.role && Objects.equals(email, user.email) && Objects.equals(firstName, user.firstName) && Objects.equals(lastName, user.lastName) && Objects.equals(savedProducts, user.savedProducts) && gender == user.gender && Objects.equals(cart, user.cart) && Objects.equals(orders, user.orders) && Objects.equals(address, user.address);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, role, email, firstName, lastName, savedProducts, gender, cart, orders, address);
     }
 }

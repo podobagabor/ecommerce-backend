@@ -7,7 +7,11 @@ import hu.bme.ecommercebackend.model.Brand;
 import hu.bme.ecommercebackend.model.Category;
 import hu.bme.ecommercebackend.model.Product;
 import hu.bme.ecommercebackend.repository.ProductRepository;
+import hu.bme.ecommercebackend.specification.ProductSpecification;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -116,5 +120,10 @@ public class ProductService {
         productEntity.setDescription(product.getDescription());
         productEntity.setDiscountPercentage(product.getDiscountPercentage());
         return new ProductDto(productRepository.save(productEntity));
+    }
+
+    public Page<ProductDto> findAll(String name, List<Long> categoryId,Boolean discount,Integer minPrice,Integer maxPrice, List<Long> brandId,Pageable pageable) {
+        Specification<Product> spec = ProductSpecification.filterBy(name,categoryId,discount,minPrice,maxPrice,brandId);
+        return productRepository.findAll(spec,pageable).map(ProductDto::new);
     }
 }

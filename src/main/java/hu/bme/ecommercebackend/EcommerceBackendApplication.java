@@ -1,5 +1,6 @@
 package hu.bme.ecommercebackend;
 
+import hu.bme.ecommercebackend.service.KeycloakService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 

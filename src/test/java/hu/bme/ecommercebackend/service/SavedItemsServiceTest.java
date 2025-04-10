@@ -46,7 +46,7 @@ public class SavedItemsServiceTest {
 
     @Test
     void testGetSavedItemsOfUser() {
-        when(userRepository.findSavedProductsById(mockUser1.getId())).thenReturn(new HashSet<>(mockUser1.getSavedProducts()));
+        when(userRepository.findSavedProductsByUser_Id(mockUser1.getId())).thenReturn(new HashSet<>(mockUser1.getSavedProducts()));
         List<Product> mockSavedProduct = mockUser1.getSavedProducts().stream().toList();
 
         List<ProductDto> savedProducts = savedItemsService.getSavedItemsOfUser(mockUser1.getId());

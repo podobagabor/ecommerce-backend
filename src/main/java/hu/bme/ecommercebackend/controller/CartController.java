@@ -4,6 +4,7 @@ import hu.bme.ecommercebackend.dto.User.CartElementCreateDto;
 import hu.bme.ecommercebackend.dto.User.CartElementDto;
 import hu.bme.ecommercebackend.service.CartService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -12,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/cart")
+@RequestMapping("api/cart")
 public class CartController {
 
     private final CartService cartService;
@@ -21,22 +22,22 @@ public class CartController {
         this.cartService = cartService;
     }
 
-    @PostMapping("/addToCart")
+    @PostMapping(value = "/addToCart")
     public ResponseEntity<CartElementDto> createCartElement(@RequestBody CartElementCreateDto cartElement, @AuthenticationPrincipal Jwt jwt) {
         return ResponseEntity.status(HttpStatus.CREATED).body(cartService.addToCart(jwt.getSubject(), cartElement));
     }
 
-    @GetMapping("/list")
+    @GetMapping(value = "/list")
     public ResponseEntity<List<CartElementDto>> getCartOfUser(@AuthenticationPrincipal Jwt jwt) {
         return ResponseEntity.ok(cartService.getCartOfUser(jwt.getSubject()));
     }
 
-    @PutMapping("/{id}/increase/{quantity}")
+    @PutMapping(value = "/{id}/increase/{quantity}")
     public ResponseEntity<CartElementDto> changeQuantity(@PathVariable Long id, @PathVariable Integer quantity, @AuthenticationPrincipal Jwt jwt) {
         return ResponseEntity.ok(cartService.modifyQuantity(id, quantity, jwt.getSubject()));
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping(value = "/delete/{id}")
     public ResponseEntity deleteCartElement(@PathVariable Long id, @AuthenticationPrincipal Jwt jwt) {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(cartService.deleteCartElementFromUser(id, jwt.getSubject()));
     }

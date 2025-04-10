@@ -2,6 +2,7 @@ package hu.bme.ecommercebackend.dto.User;
 
 import hu.bme.ecommercebackend.model.Address;
 import hu.bme.ecommercebackend.model.User;
+import hu.bme.ecommercebackend.model.enums.Gender;
 import hu.bme.ecommercebackend.model.enums.Role;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,6 +20,7 @@ public class UserDto {
     private Integer savedNumber;
     private Integer cartNumber;
     private Address address;
+    private Gender gender;
 
     public UserDto(User user) {
         this.address = user.getAddress();
@@ -29,6 +31,7 @@ public class UserDto {
         this.firsName = user.getFirstName();
         this.lastName = user.getLastName();
         this.savedNumber = user.getSavedProducts().size();
+        this.gender = user.getGender();
     }
 
     @Override
@@ -36,6 +39,11 @@ public class UserDto {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         UserDto userDto = (UserDto) o;
-        return Objects.equals(id, userDto.id) && role == userDto.role && Objects.equals(email, userDto.email) && Objects.equals(firsName, userDto.firsName) && Objects.equals(lastName, userDto.lastName) && Objects.equals(savedNumber, userDto.savedNumber) && Objects.equals(cartNumber, userDto.cartNumber) && Objects.equals(address, userDto.address);
+        return Objects.equals(id, userDto.id) && role == userDto.role && Objects.equals(email, userDto.email) && Objects.equals(firsName, userDto.firsName) && Objects.equals(lastName, userDto.lastName) && Objects.equals(savedNumber, userDto.savedNumber) && Objects.equals(cartNumber, userDto.cartNumber) && Objects.equals(address, userDto.address) && gender == userDto.gender;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, role, email, firsName, lastName, savedNumber, cartNumber, address, gender);
     }
 }

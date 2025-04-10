@@ -1,7 +1,9 @@
 package hu.bme.ecommercebackend.dto.User;
 
 import hu.bme.ecommercebackend.model.Address;
+import hu.bme.ecommercebackend.model.enums.Gender;
 import hu.bme.ecommercebackend.model.enums.Role;
+import jakarta.annotation.Nullable;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,5 +17,8 @@ public class UserCreateDto {
     private String email;
     private String firstName;
     private String lastName;
+    private Gender gender;
+    @Nullable
     private Address address;
+    private String password;
 }

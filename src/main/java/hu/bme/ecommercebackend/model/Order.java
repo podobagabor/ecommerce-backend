@@ -64,6 +64,6 @@ public class Order {
         this.items = items;
         this.billingAddress = billingAddress;
         this.shippingAddress = shippingAddress;
-        this.status = OrderStatus.INIT;
+        this.status = OrderStatus.CREATED;
     }
 }
