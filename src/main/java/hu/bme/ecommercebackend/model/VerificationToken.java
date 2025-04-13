@@ -1,5 +1,6 @@
 package hu.bme.ecommercebackend.model;
 
+import hu.bme.ecommercebackend.model.enums.TokenType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToOne;
@@ -20,5 +21,8 @@ public class VerificationToken {
     @Getter
     private User user;
 
+    private TokenType type;
+
+    @Getter
     private LocalDateTime expiryDate;
 }

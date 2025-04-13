@@ -21,6 +21,7 @@ public class UserDto {
     private Integer cartNumber;
     private Address address;
     private Gender gender;
+    private String phone;
 
     public UserDto(User user) {
         this.address = user.getAddress();
@@ -32,6 +33,7 @@ public class UserDto {
         this.lastName = user.getLastName();
         this.savedNumber = user.getSavedProducts().size();
         this.gender = user.getGender();
+        this.phone = user.getPhoneNumber();
     }
 
     @Override
@@ -39,11 +41,11 @@ public class UserDto {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         UserDto userDto = (UserDto) o;
-        return Objects.equals(id, userDto.id) && role == userDto.role && Objects.equals(email, userDto.email) && Objects.equals(firsName, userDto.firsName) && Objects.equals(lastName, userDto.lastName) && Objects.equals(savedNumber, userDto.savedNumber) && Objects.equals(cartNumber, userDto.cartNumber) && Objects.equals(address, userDto.address) && gender == userDto.gender;
+        return Objects.equals(id, userDto.id) && role == userDto.role && Objects.equals(email, userDto.email) && Objects.equals(firsName, userDto.firsName) && Objects.equals(lastName, userDto.lastName) && Objects.equals(savedNumber, userDto.savedNumber) && Objects.equals(cartNumber, userDto.cartNumber) && Objects.equals(address, userDto.address) && gender == userDto.gender && Objects.equals(phone, userDto.phone);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, role, email, firsName, lastName, savedNumber, cartNumber, address, gender);
+        return Objects.hash(id, role, email, firsName, lastName, savedNumber, cartNumber, address, gender, phone);
     }
 }

@@ -2,7 +2,7 @@ package hu.bme.ecommercebackend.service;
 
 import hu.bme.ecommercebackend.model.User;
 import hu.bme.ecommercebackend.model.VerificationToken;
-import hu.bme.ecommercebackend.repository.UserRepository;
+import hu.bme.ecommercebackend.model.enums.TokenType;
 import hu.bme.ecommercebackend.repository.VerificationTokenRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
@@ -20,10 +20,14 @@ public class VerificationTokenService {
         this.verificationTokenRepository = verificationTokenRepository;
     }
 
-    public String saveToken(User user) {
+    public String saveToken(User user, TokenType type) {
+        VerificationToken existingToken = verificationTokenRepository.getVerificationTokenByUserAndType(user,type);
+        if(existingToken != null) {
+            this.verificationTokenRepository.delete(existingToken);
+        }
         String token = UUID.randomUUID().toString();
         LocalDateTime expirationTime = LocalDateTime.now().plusDays(1);
-        verificationTokenRepository.save(new VerificationToken(token,user,expirationTime));
+        verificationTokenRepository.save(new VerificationToken(token, user,type ,expirationTime));
         return token;
     }
 

@@ -20,5 +20,7 @@ public class UserCreateDto {
     private Gender gender;
     @Nullable
     private Address address;
+    @Nullable
+    private String phone;
     private String password;
 }

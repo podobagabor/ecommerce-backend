@@ -5,6 +5,8 @@ import hu.bme.ecommercebackend.dto.User.UserCreateDto;
 import hu.bme.ecommercebackend.dto.User.UserDto;
 import hu.bme.ecommercebackend.dto.User.UserDtoDetailed;
 import hu.bme.ecommercebackend.model.User;
+import hu.bme.ecommercebackend.model.VerificationToken;
+import hu.bme.ecommercebackend.model.enums.TokenType;
 import hu.bme.ecommercebackend.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
@@ -51,8 +53,8 @@ public class UserService {
         String userId = keycloakService.registerUser(user.getEmail(), user.getFirstName(), user.getLastName(), user.getEmail(), user.getPassword());
         user.setId(userId);
         User userEntity = userRepository.save(new User(user));
-        String verificationToken = verificationTokenService.saveToken(userEntity);
-        emailService.sendEmail(user.getEmail(),"Email validation for registration",emailService.verifyEmailMessage(user.getFirstName() + " " + user.getLastName(),verificationToken));
+        String verificationToken = verificationTokenService.saveToken(userEntity, TokenType.EMAIL);
+        emailService.sendEmail(user.getEmail(),"Email validation for registration","http://localhost:4200?userToken="+ verificationToken +"&emailVerification=true");
         return new UserDto(userEntity);
     }
 
@@ -64,10 +66,15 @@ public class UserService {
 
     public ActionResponseDto requestNewPassword(String email) {
         //Todo: szép email
-        User userEntity = userRepository.findByEmail(email);
-        String userToken = verificationTokenService.saveToken(userEntity);
-        emailService.sendEmail(userEntity.getEmail(),"Password reset","http://localhost:4200?userToken="+userToken);
-        return new ActionResponseDto(true,"");
+        try {
+            User userEntity = userRepository.findByEmail(email).orElseThrow( () -> new EntityNotFoundException("Unknown email"));
+            String userToken = verificationTokenService.saveToken(userEntity,TokenType.PASSWORD);
+            emailService.sendEmail(userEntity.getEmail(),"Password reset","http://localhost:4200?forgotPassword=true&userToken="+userToken);
+            return new ActionResponseDto(true,"");
+        } catch (EntityNotFoundException e) {
+            return new ActionResponseDto(false,e.getMessage());
+        }
+
     }
 
     public ActionResponseDto setNewPassword(String token,String password) {

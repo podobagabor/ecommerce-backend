@@ -31,6 +31,8 @@ public class User {
     private String firstName;
     @Setter
     private String lastName;
+    @Setter
+    private String phoneNumber;
 
     @ManyToMany
     @Setter
@@ -60,6 +62,7 @@ public class User {
         this.cart = new ArrayList<>();
         this.orders = new ArrayList<>();
         this.gender = user.getGender();
+        this.phoneNumber = user.getPhone();
     }
 
     public User(User user) {
@@ -73,6 +76,7 @@ public class User {
         this.cart = user.getCart().stream().map(CartElement::new).collect(Collectors.toList());
         this.orders = user.getOrders().stream().map(Order::new).collect(Collectors.toList());
         this.gender = user.getGender();
+        this.phoneNumber = user.getPhoneNumber();
     }
 
     @Override
@@ -80,11 +84,11 @@ public class User {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return Objects.equals(id, user.id) && role == user.role && Objects.equals(email, user.email) && Objects.equals(firstName, user.firstName) && Objects.equals(lastName, user.lastName) && Objects.equals(savedProducts, user.savedProducts) && gender == user.gender && Objects.equals(cart, user.cart) && Objects.equals(orders, user.orders) && Objects.equals(address, user.address);
+        return Objects.equals(id, user.id) && role == user.role && Objects.equals(email, user.email) && Objects.equals(firstName, user.firstName) && Objects.equals(lastName, user.lastName) && Objects.equals(phoneNumber, user.phoneNumber) && Objects.equals(savedProducts, user.savedProducts) && gender == user.gender && Objects.equals(cart, user.cart) && Objects.equals(orders, user.orders) && Objects.equals(address, user.address);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, role, email, firstName, lastName, savedProducts, gender, cart, orders, address);
+        return Objects.hash(id, role, email, firstName, lastName, phoneNumber, savedProducts, gender, cart, orders, address);
     }
 }
