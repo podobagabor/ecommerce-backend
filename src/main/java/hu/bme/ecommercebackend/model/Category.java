@@ -3,6 +3,7 @@ package hu.bme.ecommercebackend.model;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.ArrayList;
@@ -12,6 +13,7 @@ import java.util.Objects;
 @Getter
 @Setter
 @Entity
+@NoArgsConstructor
 @Table(name = "category")
 public class Category {
     @Id
@@ -48,8 +50,6 @@ public class Category {
         this.id = id;
     }
 
-    public Category() {
-    }
 
     @Override
     public boolean equals(Object obj) {
