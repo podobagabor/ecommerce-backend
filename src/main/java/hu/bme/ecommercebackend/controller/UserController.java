@@ -1,10 +1,7 @@
 package hu.bme.ecommercebackend.controller;
 
 import hu.bme.ecommercebackend.dto.Common.ActionResponseDto;
-import hu.bme.ecommercebackend.dto.User.NewPasswordDto;
-import hu.bme.ecommercebackend.dto.User.UserCreateDto;
-import hu.bme.ecommercebackend.dto.User.UserDto;
-import hu.bme.ecommercebackend.dto.User.UserDtoDetailed;
+import hu.bme.ecommercebackend.dto.User.*;
 import hu.bme.ecommercebackend.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -40,8 +37,8 @@ public class UserController {
     }
 
     @PutMapping(value = "/modify")
-    public ResponseEntity<UserDto> modifyUser(@RequestBody UserDto user) {
-        return ResponseEntity.ok(userService.modifyUser(user));
+    public ResponseEntity<UserDtoDetailed> modifyUser(@RequestBody UserModifyDto user,@AuthenticationPrincipal Jwt jwt) {
+        return ResponseEntity.ok(userService.modifyUser(jwt.getSubject(),user));
     }
 
     @GetMapping(value = "verifyEmail/{token}")

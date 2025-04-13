@@ -23,6 +23,7 @@ public class UserDtoDetailed {
     private List<CartElementDto> cartItems;
     private Address address;
     private Gender gender;
+    private String phone;
 
     public UserDtoDetailed(User user) {
         this.address = user.getAddress();
@@ -34,5 +35,6 @@ public class UserDtoDetailed {
         this.lastName = user.getLastName();
         this.savedItems = user.getSavedProducts().stream().map(ProductDto::new).collect(Collectors.toList());
         this.gender = user.getGender();
+        this.phone = user.getPhoneNumber();
     }
 }

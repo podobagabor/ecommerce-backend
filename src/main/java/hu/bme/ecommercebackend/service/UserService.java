@@ -4,6 +4,7 @@ import hu.bme.ecommercebackend.dto.Common.ActionResponseDto;
 import hu.bme.ecommercebackend.dto.User.UserCreateDto;
 import hu.bme.ecommercebackend.dto.User.UserDto;
 import hu.bme.ecommercebackend.dto.User.UserDtoDetailed;
+import hu.bme.ecommercebackend.dto.User.UserModifyDto;
 import hu.bme.ecommercebackend.model.User;
 import hu.bme.ecommercebackend.model.VerificationToken;
 import hu.bme.ecommercebackend.model.enums.TokenType;
@@ -88,12 +89,13 @@ public class UserService {
         return userRepository.findAll().stream().map(UserDto::new).collect(Collectors.toList());
     }
 
-    public UserDto modifyUser(UserDto userDto) {
-        User userEntity = getUserById(userDto.getId());
+    public UserDtoDetailed modifyUser(String userId,UserModifyDto userDto) {
+        User userEntity = getUserById(userId);
         userEntity.setAddress(userDto.getAddress());
         userEntity.setEmail(userDto.getEmail());
-        userEntity.setFirstName(userDto.getFirsName());
+        userEntity.setFirstName(userDto.getFirstName());
         userEntity.setLastName(userDto.getLastName());
-        return new UserDto(userRepository.save(userEntity));
+        userEntity.setPhoneNumber(userDto.getPhone());
+        return new UserDtoDetailed(userRepository.save(userEntity));
     }
 }
