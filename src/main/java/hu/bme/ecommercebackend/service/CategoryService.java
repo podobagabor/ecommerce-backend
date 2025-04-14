@@ -1,6 +1,7 @@
 package hu.bme.ecommercebackend.service;
 
 import hu.bme.ecommercebackend.dto.Category.CategoryCreateDto;
+import hu.bme.ecommercebackend.dto.Category.CategoryDetailedDto;
 import hu.bme.ecommercebackend.dto.Category.CategoryDto;
 import hu.bme.ecommercebackend.model.Category;
 import hu.bme.ecommercebackend.repository.CategoryRepository;
@@ -31,9 +32,10 @@ public class CategoryService {
         return categoryRepository.findAll().stream().map(CategoryDto::new).collect(Collectors.toList());
     }
 
-    public List<CategoryDto> getMainCategories() {
+    public List<CategoryDetailedDto> getMainCategories() {
         List<Category> temp = categoryRepository.findAll().stream().filter(category -> category.getParentCategory() == null).toList();
-        return temp.stream().map(CategoryDto::new).collect(Collectors.toList());
+        List<CategoryDetailedDto> newList = temp.stream().map(CategoryDetailedDto::new).toList();
+        return newList;
     }
 
     public CategoryDto createCategoryDto(CategoryCreateDto newCategory) {
@@ -44,13 +46,13 @@ public class CategoryService {
 
     private Category createCategory(CategoryCreateDto newCategory) {
         Category parentCategory = null;
-        if(newCategory.getParentCategoryId() != null) {
-            parentCategory = categoryRepository.findById(newCategory.getParentCategoryId()).orElseThrow( () -> new EntityNotFoundException("Unknown parent category id"));
+        if (newCategory.getParentCategoryId() != null) {
+            parentCategory = categoryRepository.findById(newCategory.getParentCategoryId()).orElseThrow(() -> new EntityNotFoundException("Unknown parent category id"));
         }
         List<Category> subCategories = new ArrayList<>();
         subCategories = categoryRepository.findAllById(newCategory.getSubCategoryIds());
         return new Category(
-                newCategory.getName(), subCategories,parentCategory
+                newCategory.getName(), subCategories, parentCategory
         );
     }
 

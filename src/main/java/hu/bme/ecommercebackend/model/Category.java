@@ -1,5 +1,7 @@
 package hu.bme.ecommercebackend.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -22,12 +24,14 @@ public class Category {
 
     private String name;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "parentCategory", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Category> subCategories = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "parent_id")
     @Nullable
+    @JsonBackReference
     private Category parentCategory;
 
     public Category(String name, List<Category> subCategories, Category parentCategory) {

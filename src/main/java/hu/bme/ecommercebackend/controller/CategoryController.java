@@ -1,6 +1,7 @@
 package hu.bme.ecommercebackend.controller;
 
 import hu.bme.ecommercebackend.dto.Category.CategoryCreateDto;
+import hu.bme.ecommercebackend.dto.Category.CategoryDetailedDto;
 import hu.bme.ecommercebackend.dto.Category.CategoryDto;
 import hu.bme.ecommercebackend.service.CategoryService;
 import org.springframework.http.HttpStatus;
@@ -24,6 +25,11 @@ public class CategoryController {
     @GetMapping(value = "/list")
     public ResponseEntity<List<CategoryDto>> getAllCategories() {
         return ResponseEntity.ok(categoryService.getCategories());
+    }
+
+    @GetMapping(value = "/main")
+    public ResponseEntity<List<CategoryDetailedDto>> getMainCategories() {
+        return ResponseEntity.ok(categoryService.getMainCategories());
     }
 
     @PostMapping(value = "/create")
