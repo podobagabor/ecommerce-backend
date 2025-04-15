@@ -4,7 +4,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hu.bme.ecommercebackend.dto.Product.ProductCreateDto;
 import hu.bme.ecommercebackend.dto.Product.ProductDto;
+import hu.bme.ecommercebackend.dto.Product.ProductModifyDto;
 import hu.bme.ecommercebackend.service.ProductService;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -37,14 +39,11 @@ public class ProductController {
         return ResponseEntity.ok(productService.getProductDtoById(id));
     }
 
-    @PostMapping()
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ProductDto> createProduct(
-            @RequestPart("product") String productCreateDto,
+            @RequestPart("product") ProductCreateDto productCreateDto,
             @RequestPart(value = "images", required = false) List<MultipartFile> images) throws JsonProcessingException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        ProductCreateDto productCreateDtoObject = objectMapper.readValue(productCreateDto, ProductCreateDto.class);
-        productCreateDtoObject.setImages(images);
-        return ResponseEntity.status(HttpStatus.CREATED).body(productService.createProduct(productCreateDtoObject));
+        return ResponseEntity.status(HttpStatus.CREATED).body(productService.createProduct(productCreateDto,images));
     }
 
     @DeleteMapping(value = "/delete/{id}")
@@ -77,5 +76,10 @@ public class ProductController {
             ) {
         Pageable pageable = PageRequest.of(page,size, sortDirection == null ? Sort.Direction.ASC : sortDirection , sortId);
         return ResponseEntity.ok(productService.findAll(name,categoryId,discount,minPrice,maxPrice,brandId,pageable));
+    }
+
+    @PutMapping("/update")
+    public ResponseEntity<ProductDto> updateProduct(@RequestBody ProductModifyDto productModifyDto) {
+        return ResponseEntity.ok(productService.modifyProduct(productModifyDto));
     }
 }

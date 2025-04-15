@@ -1,6 +1,7 @@
 package hu.bme.ecommercebackend.dto.Category;
 
 import hu.bme.ecommercebackend.model.Category;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,6 +12,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CategoryBasicDto {
+    @NotNull
     private Long id;
     private String name;
 

@@ -3,6 +3,7 @@ package hu.bme.ecommercebackend.controller;
 import hu.bme.ecommercebackend.dto.Category.CategoryCreateDto;
 import hu.bme.ecommercebackend.dto.Category.CategoryDetailedDto;
 import hu.bme.ecommercebackend.dto.Category.CategoryDto;
+import hu.bme.ecommercebackend.dto.Common.ActionResponseDto;
 import hu.bme.ecommercebackend.service.CategoryService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -48,7 +49,7 @@ public class CategoryController {
     }
 
     @DeleteMapping(value = "/delete/{id}")
-    public ResponseEntity<Boolean> deleteCategory(@PathVariable Long id) {
+    public ResponseEntity<ActionResponseDto> deleteCategory(@PathVariable Long id) {
         return ResponseEntity.ok(categoryService.deleteCategoryWithId(id));
     }
 }

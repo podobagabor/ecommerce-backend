@@ -2,6 +2,7 @@ package hu.bme.ecommercebackend.dto.Category;
 
 import hu.bme.ecommercebackend.model.Category;
 import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -15,6 +16,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 public class CategoryDto {
 
+    @NotNull
     private Long id;
 
     private String name;

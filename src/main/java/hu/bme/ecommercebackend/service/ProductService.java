@@ -62,9 +62,9 @@ public class ProductService {
         return true;
     }
 
-    public ProductDto createProduct(ProductCreateDto productCreateDto) {
+    public ProductDto createProduct(ProductCreateDto productCreateDto,List<MultipartFile> images) {
         List<String> imageUrlList = new ArrayList<String>();
-        for (MultipartFile file : productCreateDto.getImages()) {
+        for (MultipartFile file : images) {
             imageUrlList.add(imageService.saveImage(file));
         }
         Category categoryEntity = categoryService.getCategoryById(productCreateDto.getCategoryId());
