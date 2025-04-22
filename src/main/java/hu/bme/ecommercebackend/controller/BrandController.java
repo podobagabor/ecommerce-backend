@@ -2,8 +2,14 @@ package hu.bme.ecommercebackend.controller;
 
 import hu.bme.ecommercebackend.dto.Brand.BrandCreateDto;
 import hu.bme.ecommercebackend.dto.Brand.BrandDto;
+import hu.bme.ecommercebackend.dto.Brand.BrandSimpleDto;
+import hu.bme.ecommercebackend.dto.Common.ActionResponseDto;
 import hu.bme.ecommercebackend.service.BrandService;
 import hu.bme.ecommercebackend.service.CategoryService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -21,13 +27,25 @@ public class BrandController {
         this.brandService = brandService;
     }
 
-    @PostMapping(value = "/create")
-    public ResponseEntity<BrandDto> createBrand(@RequestParam("name") String name,@RequestParam("description") String description, @RequestParam("image") MultipartFile image) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(this.brandService.createBrand(new BrandCreateDto(name,description),image));
+    @PostMapping(value = "/create",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<BrandDto> createBrand(@RequestPart("brand") BrandCreateDto brand,@RequestPart(value = "image", required = false) MultipartFile image) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(this.brandService.createBrand(brand,image));
     }
 
     @GetMapping(value = "/list")
-    public ResponseEntity<List<BrandDto>> getBrandList() {
+    public ResponseEntity<Page<BrandDto>> getBrandPageable(
+            @RequestParam(required = false) String name,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "id") String sortId,
+            @RequestParam(required = false) Sort.Direction sortDirection
+    ) {
+        Pageable pageable = PageRequest.of(page,size, sortDirection == null ? Sort.Direction.ASC : sortDirection , sortId);
+        return ResponseEntity.ok(this.brandService.getBrandPageable(name,pageable));
+    }
+
+    @GetMapping()
+    public ResponseEntity<List<BrandSimpleDto>> getBrands() {
         return ResponseEntity.ok(this.brandService.getBrandList());
     }
 
@@ -37,17 +55,14 @@ public class BrandController {
     }
 
     @DeleteMapping(value = "/delete/{id}")
-    public ResponseEntity<Boolean> deleteBrand(@PathVariable Long id) {
+    public ResponseEntity<ActionResponseDto> deleteBrand(@PathVariable Long id) {
         return ResponseEntity.ok(brandService.deleteBrand(id));
     }
 
-    @PutMapping(value = "/modify")
-    public ResponseEntity<BrandDto> modifyBrand(@RequestBody BrandDto brandDto) {
-        return ResponseEntity.ok(brandService.modifyBrand(brandDto));
+    @PutMapping(value = "/modify" ,consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<BrandDto> modifyBrand(@RequestPart("brand") BrandDto brand,
+                                                @RequestPart(value = "newImage",required = false) MultipartFile newImage) {
+        return ResponseEntity.ok(brandService.modifyBrand(brand,newImage));
     }
 
-    @PutMapping(value = "/modifyImage/{id}")
-    public ResponseEntity<BrandDto> modifyBrand(@PathVariable Long id, @RequestParam("newImage") MultipartFile file) {
-        return ResponseEntity.ok(brandService.modifyImage(id,file));
-    }
 }

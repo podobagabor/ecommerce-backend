@@ -12,7 +12,4 @@ import java.util.List;
 
 public interface ProductRepository extends JpaRepository<Product,Long>, JpaSpecificationExecutor<Product> {
     boolean existsByCategoryId(Long categoryId);
-    @Query(value = "SELECT DISTINCT p FROM Product p LEFT JOIN FETCH p.category",
-            countQuery = "SELECT COUNT(DISTINCT p) FROM Product p")
-    Page<Product> findAllWithCategory(Pageable pageable);
 }

@@ -1,6 +1,7 @@
 package hu.bme.ecommercebackend.dto.Brand;
 
 import hu.bme.ecommercebackend.model.Brand;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,6 +14,7 @@ import java.util.Objects;
 @NoArgsConstructor
 @Setter
 public class BrandDto {
+    @NotNull
     private Long id;
     private String imageUrl;
     private String description;

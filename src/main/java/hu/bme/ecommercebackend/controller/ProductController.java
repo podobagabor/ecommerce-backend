@@ -78,8 +78,9 @@ public class ProductController {
         return ResponseEntity.ok(productService.findAll(name,categoryId,discount,minPrice,maxPrice,brandId,pageable));
     }
 
-    @PutMapping("/update")
-    public ResponseEntity<ProductDto> updateProduct(@RequestBody ProductModifyDto productModifyDto) {
-        return ResponseEntity.ok(productService.modifyProduct(productModifyDto));
+    @PutMapping(value ="/update",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<ProductDto> updateProduct(@RequestPart("productModifyDto") ProductModifyDto productModifyDto,
+                                                    @RequestPart(value = "newImages", required = false) List<MultipartFile> newImages) {
+        return ResponseEntity.ok(productService.modifyProduct(productModifyDto,newImages));
     }
 }

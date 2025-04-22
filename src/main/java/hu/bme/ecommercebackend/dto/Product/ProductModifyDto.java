@@ -15,7 +15,6 @@ public class ProductModifyDto {
     private String description;
     private Integer discountPercentage;
     private List<ImageModifyDto> images;
-    private List<MultipartFile> newImages;
     private Integer price;
     private Long categoryId;
     private Long brandId;

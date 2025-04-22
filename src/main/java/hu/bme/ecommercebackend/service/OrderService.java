@@ -8,7 +8,11 @@ import hu.bme.ecommercebackend.repository.CartRepository;
 import hu.bme.ecommercebackend.repository.OrderItemRepository;
 import hu.bme.ecommercebackend.repository.OrderRepository;
 import hu.bme.ecommercebackend.repository.UserRepository;
+import hu.bme.ecommercebackend.specification.OrderSpecification;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -57,6 +61,11 @@ public class OrderService {
 
     public List<OrderDto> getAllOrders() {
         return orderRepository.findAll().stream().map(OrderDto::new).collect(Collectors.toList());
+    }
+
+    public Page<OrderDto> getOrderListPage(OrderStatus status, Long id, Pageable pageable) {
+        Specification<Order> spec = OrderSpecification.filterBy(id,status);
+        return orderRepository.findAll(spec,pageable).map(OrderDto::new);
     }
 
     public List<OrderDto> getOrdersOfUser(String id) {

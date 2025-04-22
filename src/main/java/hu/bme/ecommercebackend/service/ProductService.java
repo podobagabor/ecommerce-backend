@@ -54,7 +54,7 @@ public class ProductService {
     }
 
     public Product getProductReferenceById(Long id) {
-        return productRepository.getReferenceById(id) ;
+        return productRepository.getReferenceById(id);
     }
 
     public Boolean deleteProductById(Long id) {
@@ -62,7 +62,7 @@ public class ProductService {
         return true;
     }
 
-    public ProductDto createProduct(ProductCreateDto productCreateDto,List<MultipartFile> images) {
+    public ProductDto createProduct(ProductCreateDto productCreateDto, List<MultipartFile> images) {
         List<String> imageUrlList = new ArrayList<String>();
         for (MultipartFile file : images) {
             imageUrlList.add(imageService.saveImage(file));
@@ -94,7 +94,7 @@ public class ProductService {
         return new ProductDto(productRepository.save(productEntity));
     }
 
-    public ProductDto modifyProduct(ProductModifyDto product) {
+    public ProductDto modifyProduct(ProductModifyDto product, List<MultipartFile> newImages) {
         Product productEntity = productRepository.findById(product.getId()).orElseThrow(() -> new EntityNotFoundException("Unknown entity"));
         if (!Objects.equals(productEntity.getCategory().getId(), product.getCategoryId())) {
             Category categoryEntity = categoryService.getCategoryById(product.getCategoryId());
@@ -108,12 +108,15 @@ public class ProductService {
             if (imageModifyDto.getDeleted()) {
                 productEntity.setImages(productEntity.getImages().stream().filter(
                         imageUrl -> imageUrl.equals(imageModifyDto.getUrl())
-                ).toList());
+                ).collect(Collectors.toCollection(ArrayList::new)));
+                this.imageService.deleteImage(imageModifyDto.getUrl());
             }
         });
-        product.getNewImages().forEach(multipartFile -> {
-            productEntity.getImages().add(imageService.saveImage(multipartFile));
-        });
+        if (newImages != null) {
+            newImages.forEach(multipartFile -> {
+                productEntity.getImages().add(imageService.saveImage(multipartFile));
+            });
+        }
         productEntity.setCount(product.getCount());
         productEntity.setName(product.getName());
         productEntity.setPrice(product.getPrice());
@@ -122,8 +125,8 @@ public class ProductService {
         return new ProductDto(productRepository.save(productEntity));
     }
 
-    public Page<ProductDto> findAll(String name, List<Long> categoryId,Boolean discount,Integer minPrice,Integer maxPrice, List<Long> brandId,Pageable pageable) {
-        Specification<Product> spec = ProductSpecification.filterBy(name,categoryId,discount,minPrice,maxPrice,brandId);
-        return productRepository.findAll(spec,pageable).map(ProductDto::new);
+    public Page<ProductDto> findAll(String name, List<Long> categoryId, Boolean discount, Integer minPrice, Integer maxPrice, List<Long> brandId, Pageable pageable) {
+        Specification<Product> spec = ProductSpecification.filterBy(name, categoryId, discount, minPrice, maxPrice, brandId);
+        return productRepository.findAll(spec, pageable).map(ProductDto::new);
     }
 }

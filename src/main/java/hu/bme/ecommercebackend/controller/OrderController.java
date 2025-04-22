@@ -4,8 +4,11 @@ import hu.bme.ecommercebackend.dto.Order.OrderCreateDto;
 import hu.bme.ecommercebackend.dto.Order.OrderDto;
 import hu.bme.ecommercebackend.model.enums.OrderStatus;
 import hu.bme.ecommercebackend.service.OrderService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -32,9 +35,22 @@ public class OrderController {
         return ResponseEntity.ok(orderService.getOrdersOfUser(jwt.getSubject()));
     }
 
-    @GetMapping(value = "/all")
+    @GetMapping()
     public ResponseEntity<List<OrderDto>> getAllOrder(@AuthenticationPrincipal Jwt jwt) {
         return ResponseEntity.ok(orderService.getAllOrders());
+    }
+
+    @GetMapping(value = "/list")
+    public ResponseEntity<Page<OrderDto>> getAllOrder(
+            @RequestParam(required = false) OrderStatus status,
+            @RequestParam(required = false) Long id,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "id") String sortId,
+            @RequestParam(required = false) Sort.Direction sortDirection
+    ) {
+        Pageable pageable = PageRequest.of(page, size, sortDirection == null ? Sort.Direction.ASC : sortDirection, sortId);
+        return ResponseEntity.ok(orderService.getOrderListPage(status, id, pageable));
     }
 
     @PutMapping(value = "/modify/{id}/{status}")

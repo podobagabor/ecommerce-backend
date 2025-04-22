@@ -2,12 +2,19 @@ package hu.bme.ecommercebackend.service;
 
 import hu.bme.ecommercebackend.dto.Brand.BrandCreateDto;
 import hu.bme.ecommercebackend.dto.Brand.BrandDto;
+import hu.bme.ecommercebackend.dto.Brand.BrandSimpleDto;
+import hu.bme.ecommercebackend.dto.Common.ActionResponseDto;
 import hu.bme.ecommercebackend.model.Brand;
 import hu.bme.ecommercebackend.repository.BrandRepository;
+import hu.bme.ecommercebackend.specification.OrderSpecification;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.swing.*;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -28,10 +35,17 @@ public class BrandService {
         return new BrandDto(brandEntity.getId(), brandEntity.getImage(), brandEntity.getDescription(), brandEntity.getName());
     }
 
-    public List<BrandDto> getBrandList() {
+    public List<BrandSimpleDto> getBrandList() {
         return brandRepository.findAll().stream().map(
-                BrandDto::new
+                BrandSimpleDto::new
         ).collect(Collectors.toList());
+    }
+
+    public Page<BrandDto> getBrandPageable(String searchKey, Pageable pageable) {
+        Specification<Brand> spec = OrderSpecification.filterBy(searchKey);
+        return brandRepository.findAll(spec,pageable).map(
+                BrandDto::new
+        );
     }
 
     public BrandDto getBrandDtoById(Long id) {
@@ -42,17 +56,26 @@ public class BrandService {
         return brandRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Unknown entity"));
     }
 
-    public Boolean deleteBrand(Long id) {
-        Brand brandEntity = brandRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Unknown entity"));
-        imageService.deleteImage(brandEntity.getImage());
-        brandRepository.deleteById(id);
-        return true;
+    public ActionResponseDto deleteBrand(Long id) {
+        try {
+            Brand brandEntity = brandRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Unknown entity"));
+            imageService.deleteImage(brandEntity.getImage());
+            brandRepository.deleteById(id);
+            return new ActionResponseDto(true,"");
+        } catch (Exception e) {
+            return new ActionResponseDto(false,e.toString());
+        }
+
     }
 
-    public BrandDto modifyBrand(BrandDto brandDto) {
-        Brand brandEntity = brandRepository.findById(brandDto.getId()).orElseThrow(() -> new EntityNotFoundException("Unknown entity"));
-        brandEntity.setDescription(brandDto.getDescription());
-        brandEntity.setName(brandDto.getName());
+    public BrandDto modifyBrand(BrandDto brand, MultipartFile newImage) {
+        Brand brandEntity = brandRepository.findById(brand.getId()).orElseThrow(() -> new EntityNotFoundException("Unknown entity"));
+        brandEntity.setDescription(brand.getDescription());
+        brandEntity.setName(brand.getName());
+        if(newImage != null) {
+            this.imageService.deleteImage(brandEntity.getImage());
+            brandEntity.setImage(this.imageService.saveImage(newImage));
+        }
         Brand modifiedBrand = brandRepository.save(brandEntity);
         return new BrandDto(modifiedBrand);
     }
