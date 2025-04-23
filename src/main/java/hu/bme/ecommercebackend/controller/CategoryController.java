@@ -1,8 +1,6 @@
 package hu.bme.ecommercebackend.controller;
 
-import hu.bme.ecommercebackend.dto.Category.CategoryCreateDto;
-import hu.bme.ecommercebackend.dto.Category.CategoryDetailedDto;
-import hu.bme.ecommercebackend.dto.Category.CategoryDto;
+import hu.bme.ecommercebackend.dto.Category.*;
 import hu.bme.ecommercebackend.dto.Common.ActionResponseDto;
 import hu.bme.ecommercebackend.service.CategoryService;
 import org.springframework.http.HttpStatus;
@@ -43,9 +41,19 @@ public class CategoryController {
         return ResponseEntity.ok(categoryService.getCategoryDtoById(id));
     }
 
+    @GetMapping(value = "/detailed/{id}")
+    public ResponseEntity<CategoryDetailedDto> getCategoryDetailedById(@PathVariable Long id) {
+        return ResponseEntity.ok(categoryService.getCategoryDetailedDtoById(id));
+    }
+
+    @GetMapping(value = "/createData")
+    public ResponseEntity<CategoryCreateDataDto> getCategoryCreateData() {
+        return ResponseEntity.ok(categoryService.getCategoryCreateData());
+    }
+
     @PutMapping(value = "/modify")
-    public ResponseEntity<CategoryDto> modifyCategory(@RequestBody CategoryDto categoryDto) {
-        return ResponseEntity.ok(categoryService.modifyCategory(categoryDto));
+    public ResponseEntity<CategoryDto> modifyCategory(@RequestBody CategoryModifyDto categoryModifyDto) {
+        return ResponseEntity.ok(categoryService.modifyCategory(categoryModifyDto));
     }
 
     @DeleteMapping(value = "/delete/{id}")

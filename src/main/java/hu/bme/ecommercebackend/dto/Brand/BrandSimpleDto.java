@@ -1,6 +1,7 @@
 package hu.bme.ecommercebackend.dto.Brand;
 
 import hu.bme.ecommercebackend.model.Brand;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,6 +12,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Setter
 public class BrandSimpleDto {
+    @NotNull
     private Long id;
     private String name;
 

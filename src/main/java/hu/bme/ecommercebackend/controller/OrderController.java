@@ -41,7 +41,7 @@ public class OrderController {
     }
 
     @GetMapping(value = "/list")
-    public ResponseEntity<Page<OrderDto>> getAllOrder(
+    public ResponseEntity<Page<OrderDto>> getOrderListPage(
             @RequestParam(required = false) OrderStatus status,
             @RequestParam(required = false) Long id,
             @RequestParam(defaultValue = "0") int page,

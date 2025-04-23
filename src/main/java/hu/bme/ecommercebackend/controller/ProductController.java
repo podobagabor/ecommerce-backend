@@ -1,12 +1,10 @@
 package hu.bme.ecommercebackend.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import hu.bme.ecommercebackend.dto.Product.ProductCreateDto;
 import hu.bme.ecommercebackend.dto.Product.ProductDto;
 import hu.bme.ecommercebackend.dto.Product.ProductModifyDto;
 import hu.bme.ecommercebackend.service.ProductService;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -34,16 +32,24 @@ public class ProductController {
         return ResponseEntity.ok(productService.getProductList());
     }
 
-    @GetMapping(value = "/{id}")
+    @GetMapping(value = "/public/{id}")
     public ResponseEntity<ProductDto> getProductById(@PathVariable Long id) {
         return ResponseEntity.ok(productService.getProductDtoById(id));
     }
+
+    /*
+    @GetMapping(value = "/public/getListByCategory")
+    public ResponseEntity<Page<ProductDto>> getProductListByCategory(@PathVariable Long id) {
+        return ResponseEntity.ok(productService.findAllInCategory(id));
+    }
+
+     */
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ProductDto> createProduct(
             @RequestPart("product") ProductCreateDto productCreateDto,
             @RequestPart(value = "images", required = false) List<MultipartFile> images) throws JsonProcessingException {
-        return ResponseEntity.status(HttpStatus.CREATED).body(productService.createProduct(productCreateDto,images));
+        return ResponseEntity.status(HttpStatus.CREATED).body(productService.createProduct(productCreateDto, images));
     }
 
     @DeleteMapping(value = "/delete/{id}")
@@ -61,26 +67,26 @@ public class ProductController {
         return ResponseEntity.ok(productService.increaseCount(id, count));
     }
 
-    @GetMapping(value = "/list")
+    @GetMapping(value = "/public/list")
     public ResponseEntity<Page<ProductDto>> getProductsByParams(
             @RequestParam(required = false) String name,
             @RequestParam(required = false) List<Long> categoryId,
             @RequestParam(defaultValue = "false") Boolean discount,
             @RequestParam(defaultValue = "0") Integer minPrice,
             @RequestParam(required = false) Integer maxPrice,
-            @RequestParam(required = false)  List<Long> brandId,
+            @RequestParam(required = false) List<Long> brandId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "id") String sortId,
             @RequestParam(required = false) Sort.Direction sortDirection
-            ) {
-        Pageable pageable = PageRequest.of(page,size, sortDirection == null ? Sort.Direction.ASC : sortDirection , sortId);
-        return ResponseEntity.ok(productService.findAll(name,categoryId,discount,minPrice,maxPrice,brandId,pageable));
+    ) {
+        Pageable pageable = PageRequest.of(page, size, sortDirection == null ? Sort.Direction.ASC : sortDirection, sortId);
+        return ResponseEntity.ok(productService.findAll(name, categoryId, discount, minPrice, maxPrice, brandId, pageable));
     }
 
-    @PutMapping(value ="/update",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PutMapping(value = "/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ProductDto> updateProduct(@RequestPart("productModifyDto") ProductModifyDto productModifyDto,
                                                     @RequestPart(value = "newImages", required = false) List<MultipartFile> newImages) {
-        return ResponseEntity.ok(productService.modifyProduct(productModifyDto,newImages));
+        return ResponseEntity.ok(productService.modifyProduct(productModifyDto, newImages));
     }
 }

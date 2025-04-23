@@ -129,4 +129,22 @@ public class ProductService {
         Specification<Product> spec = ProductSpecification.filterBy(name, categoryId, discount, minPrice, maxPrice, brandId);
         return productRepository.findAll(spec, pageable).map(ProductDto::new);
     }
+
+    public Page<ProductDto> findAllInCategory(Long selectedMainCategory,String name, List<Long> categoryId, Boolean discount, Integer minPrice, Integer maxPrice, List<Long> brandId, Pageable pageable) {
+        List<Long> selectedCategoryIds = new ArrayList<>();
+        Category mainCategory = this.categoryService.getCategoryById(selectedMainCategory);
+        selectedCategoryIds.add(mainCategory.getId());
+        selectedCategoryIds.addAll(getSubCategoryIds(mainCategory));
+        Specification<Product> spec = ProductSpecification.filterBy(name, selectedCategoryIds, discount, minPrice, maxPrice, brandId);
+        return productRepository.findAll(spec, pageable).map(ProductDto::new);
+    }
+
+    private List<Long> getSubCategoryIds(Category category) {
+        List<Long> ids = new ArrayList<>();
+        category.getSubCategories().forEach(subCategory -> {
+            ids.add(subCategory.getId());
+            ids.addAll(getSubCategoryIds(category));
+        } );
+        return ids;
+    }
 }

@@ -1,6 +1,7 @@
 package hu.bme.ecommercebackend.model.enums;
 
 public enum OrderStatus {
+    CANCELLED("cancelled"),
     CREATED("created"),
     IN_PROGRESS("in progress"),
     UNDER_DELIVERY("under delivery"),

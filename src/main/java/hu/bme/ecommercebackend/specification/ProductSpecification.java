@@ -26,7 +26,7 @@ public class ProductSpecification {
                 predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("price"), minPrice));
             }
             if (maxPrice != null) {
-                predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("price"), minPrice));
+                predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("price"), maxPrice));
             }
             if (brandId != null) {
                 predicates.add(root.get("brand").get("id").in(brandId));

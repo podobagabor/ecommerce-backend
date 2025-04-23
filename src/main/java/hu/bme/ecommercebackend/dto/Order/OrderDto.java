@@ -1,5 +1,6 @@
 package hu.bme.ecommercebackend.dto.Order;
 
+import hu.bme.ecommercebackend.dto.User.UserDto;
 import hu.bme.ecommercebackend.model.Address;
 import hu.bme.ecommercebackend.model.Order;
 import hu.bme.ecommercebackend.model.enums.OrderStatus;
@@ -19,6 +20,7 @@ public class OrderDto {
     Address billingAddress;
     Address shippingAddress;
     OrderStatus status;
+    UserDto user;
 
     public OrderDto(Order order) {
         this.id = order.getId();
@@ -26,5 +28,6 @@ public class OrderDto {
         this.shippingAddress = order.getShippingAddress();
         this.items = order.getItems().stream().map(OrderItemDto::new).collect(Collectors.toList());
         this.status = order.getStatus();
+        this.user = new UserDto(order.getUser());
     }
 }
