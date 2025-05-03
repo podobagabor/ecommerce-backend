@@ -1,13 +1,12 @@
 package hu.bme.ecommercebackend.service;
 
+import hu.bme.ecommercebackend.customExceptions.EntityNotFoundException;
 import hu.bme.ecommercebackend.dto.Brand.BrandCreateDto;
 import hu.bme.ecommercebackend.dto.Brand.BrandDto;
 import hu.bme.ecommercebackend.dto.Brand.BrandSimpleDto;
-import hu.bme.ecommercebackend.dto.Common.ActionResponseDto;
 import hu.bme.ecommercebackend.model.Brand;
 import hu.bme.ecommercebackend.repository.BrandRepository;
 import hu.bme.ecommercebackend.specification.OrderSpecification;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -15,9 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.swing.*;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -45,7 +42,7 @@ public class BrandService {
 
     public Page<BrandDto> getBrandPageable(String searchKey, Pageable pageable) {
         Specification<Brand> spec = OrderSpecification.filterBy(searchKey);
-        return brandRepository.findAll(spec,pageable).map(
+        return brandRepository.findAll(spec, pageable).map(
                 BrandDto::new
         );
     }
@@ -55,28 +52,22 @@ public class BrandService {
     }
 
     public Brand getBrandById(Long id) {
-        return brandRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Unknown entity"));
+        return brandRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Unknown brand entity"));
     }
 
     @Transactional
-    public ActionResponseDto deleteBrand(Long id) {
-        try {
-            Brand brandEntity = brandRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Unknown entity"));
-            imageService.deleteImage(brandEntity.getImage());
-            brandRepository.deleteById(id);
-            return new ActionResponseDto(true,"");
-        } catch (Exception e) {
-            return new ActionResponseDto(false,e.toString());
-        }
-
+    public void deleteBrand(Long id) {
+        Brand brandEntity = brandRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Unknown brand entity"));
+        imageService.deleteImage(brandEntity.getImage());
+        brandRepository.deleteById(id);
     }
 
     @Transactional
     public BrandDto modifyBrand(BrandDto brand, MultipartFile newImage) {
-        Brand brandEntity = brandRepository.findById(brand.getId()).orElseThrow(() -> new EntityNotFoundException("Unknown entity"));
+        Brand brandEntity = brandRepository.findById(brand.getId()).orElseThrow(() -> new EntityNotFoundException("Unknown brand entity"));
         brandEntity.setDescription(brand.getDescription());
         brandEntity.setName(brand.getName());
-        if(newImage != null) {
+        if (newImage != null) {
             this.imageService.deleteImage(brandEntity.getImage());
             brandEntity.setImage(this.imageService.saveImage(newImage));
         }
@@ -85,7 +76,7 @@ public class BrandService {
 
     @Transactional
     public BrandDto modifyImage(Long id, MultipartFile multipartFile) {
-        Brand brandEntity = brandRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Unknown entity"));
+        Brand brandEntity = brandRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Unknown brand entity"));
         imageService.deleteImage(brandEntity.getImage());
         String imageEntity = imageService.saveImage(multipartFile);
         brandEntity.setImage(imageEntity);

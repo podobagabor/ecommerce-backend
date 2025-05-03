@@ -3,7 +3,6 @@ package hu.bme.ecommercebackend.controller;
 import hu.bme.ecommercebackend.dto.Brand.BrandCreateDto;
 import hu.bme.ecommercebackend.dto.Brand.BrandDto;
 import hu.bme.ecommercebackend.dto.Brand.BrandSimpleDto;
-import hu.bme.ecommercebackend.dto.Common.ActionResponseDto;
 import hu.bme.ecommercebackend.service.BrandService;
 import hu.bme.ecommercebackend.service.CategoryService;
 import org.springframework.data.domain.Page;
@@ -28,7 +27,7 @@ public class BrandController {
     }
 
     @PostMapping(value = "/create",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<BrandDto> createBrand(@RequestPart("brand") BrandCreateDto brand,@RequestPart(value = "image", required = false) MultipartFile image) {
+    public ResponseEntity<BrandDto> createBrand(@RequestPart("brand") BrandCreateDto brand,@RequestPart(value = "image") MultipartFile image) {
         return ResponseEntity.status(HttpStatus.CREATED).body(this.brandService.createBrand(brand,image));
     }
 
@@ -55,8 +54,9 @@ public class BrandController {
     }
 
     @DeleteMapping(value = "/delete/{id}")
-    public ResponseEntity<ActionResponseDto> deleteBrand(@PathVariable Long id) {
-        return ResponseEntity.ok(brandService.deleteBrand(id));
+    public ResponseEntity<Void> deleteBrand(@PathVariable Long id) {
+        brandService.deleteBrand(id);
+        return ResponseEntity.accepted().build();
     }
 
     @PutMapping(value = "/modify" ,consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

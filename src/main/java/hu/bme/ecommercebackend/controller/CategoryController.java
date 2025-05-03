@@ -1,13 +1,9 @@
 package hu.bme.ecommercebackend.controller;
 
 import hu.bme.ecommercebackend.dto.Category.*;
-import hu.bme.ecommercebackend.dto.Common.ActionResponseDto;
 import hu.bme.ecommercebackend.service.CategoryService;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -57,7 +53,8 @@ public class CategoryController {
     }
 
     @DeleteMapping(value = "/delete/{id}")
-    public ResponseEntity<ActionResponseDto> deleteCategory(@PathVariable Long id) {
-        return ResponseEntity.ok(categoryService.deleteCategoryWithId(id));
+    public ResponseEntity<Void> deleteCategory(@PathVariable Long id) {
+        categoryService.deleteCategoryWithId(id);
+        return ResponseEntity.accepted().build();
     }
 }

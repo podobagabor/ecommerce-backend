@@ -4,6 +4,7 @@ import hu.bme.ecommercebackend.model.Address;
 import hu.bme.ecommercebackend.model.User;
 import hu.bme.ecommercebackend.model.enums.Gender;
 import hu.bme.ecommercebackend.model.enums.Role;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,15 +13,33 @@ import java.util.Objects;
 @Getter
 @Setter
 public class UserDto {
+
+    @NotNull
     private String id;
+
+    @NotNull
     private Role role;
+
+    @NotNull
     private String email;
+
+    @NotNull
     private String firsName;
+
+    @NotNull
     private String lastName;
+
+    @NotNull
     private Integer savedNumber;
+
+    @NotNull
     private Integer cartNumber;
+
     private Address address;
+
+    @NotNull
     private Gender gender;
+
     private String phone;
 
     public UserDto(User user) {

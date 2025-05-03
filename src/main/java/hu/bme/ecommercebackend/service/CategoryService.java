@@ -1,11 +1,11 @@
 package hu.bme.ecommercebackend.service;
 
+import hu.bme.ecommercebackend.customExceptions.EntityNotFoundException;
+import hu.bme.ecommercebackend.customExceptions.IllegalActionException;
 import hu.bme.ecommercebackend.dto.Category.*;
-import hu.bme.ecommercebackend.dto.Common.ActionResponseDto;
 import hu.bme.ecommercebackend.model.Category;
 import hu.bme.ecommercebackend.repository.CategoryRepository;
 import hu.bme.ecommercebackend.repository.ProductRepository;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,7 +33,7 @@ public class CategoryService {
     }
 
     public Category getCategoryById(Long id) {
-        return categoryRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Not found"));
+        return categoryRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Unknown category entity"));
     }
 
     public List<CategoryDto> getCategories() {
@@ -50,7 +50,6 @@ public class CategoryService {
     public CategoryDto createCategoryDto(CategoryCreateDto newCategory) {
         Category categoryEntity = createCategory(newCategory.getName(), newCategory.getParentCategoryId());
         if (categoryEntity == null) {
-            //Todo
             throw new RuntimeException("Error occurred during Category creation.");
         }
         Category tempCategory = categoryRepository.save(categoryEntity);
@@ -84,7 +83,7 @@ public class CategoryService {
                 if (isParentCategoryValid(newParentCategory)) {
                     modifiedCategory.setParentCategory(newParentCategory);
                 } else {
-                    throw new RuntimeException("Parent not appropriate");
+                    throw new IllegalActionException("Parent not appropriate");
                 }
             } else {
                 modifiedCategory.setParentCategory(null);
@@ -95,18 +94,12 @@ public class CategoryService {
     }
 
     @Transactional
-    public ActionResponseDto deleteCategoryWithId(Long id) {
-        try {
-            boolean isInUse = this.productRepository.existsByCategoryId(id);
-            if (!isInUse) {
-                categoryRepository.deleteById(id);
-                return new ActionResponseDto(true, "");
-            } else {
-                return new ActionResponseDto(false, "A kategória használatban van, így törlése nem lehetséges.");
-            }
-
-        } catch (RuntimeException exception) {
-            return new ActionResponseDto(false, exception.getMessage());
+    public void deleteCategoryWithId(Long id) {
+        boolean isInUse = this.productRepository.existsByCategoryId(id);
+        if (!isInUse) {
+            categoryRepository.deleteById(id);
+        } else {
+            throw new IllegalActionException("Category is in use, or there is no category for the given id.");
         }
     }
 

@@ -1,5 +1,6 @@
 package hu.bme.ecommercebackend.service;
 
+import hu.bme.ecommercebackend.customExceptions.EntityNotFoundException;
 import hu.bme.ecommercebackend.dto.Product.ProductCreateDto;
 import hu.bme.ecommercebackend.dto.Product.ProductDto;
 import hu.bme.ecommercebackend.dto.Product.ProductModifyDto;
@@ -8,7 +9,6 @@ import hu.bme.ecommercebackend.model.Category;
 import hu.bme.ecommercebackend.model.Product;
 import hu.bme.ecommercebackend.repository.ProductRepository;
 import hu.bme.ecommercebackend.specification.ProductSpecification;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -87,21 +87,21 @@ public class ProductService {
 
     @Transactional
     public ProductDto reduceCount(Long id, Integer value) {
-        Product productEntity = productRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Unknown entity"));
+        Product productEntity = productRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Unknown product entity"));
         productEntity.setCount(productEntity.getCount() - value);
         return new ProductDto(productEntity);
     }
 
     @Transactional
     public ProductDto increaseCount(Long id, Integer value) {
-        Product productEntity = productRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Unknown entity"));
+        Product productEntity = productRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Unknown product entity"));
         productEntity.setCount(productEntity.getCount() + value);
         return new ProductDto(productEntity);
     }
 
     @Transactional
     public ProductDto modifyProduct(ProductModifyDto product, List<MultipartFile> newImages) {
-        Product productEntity = productRepository.findById(product.getId()).orElseThrow(() -> new EntityNotFoundException("Unknown entity"));
+        Product productEntity = productRepository.findById(product.getId()).orElseThrow(() -> new EntityNotFoundException("Unknown product entity"));
         if (!Objects.equals(productEntity.getCategory().getId(), product.getCategoryId())) {
             Category categoryEntity = categoryService.getCategoryById(product.getCategoryId());
             productEntity.setCategory(categoryEntity);

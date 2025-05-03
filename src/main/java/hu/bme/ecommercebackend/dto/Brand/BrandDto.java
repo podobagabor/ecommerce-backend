@@ -16,8 +16,14 @@ import java.util.Objects;
 public class BrandDto {
     @NotNull
     private Long id;
+
+    @NotNull
     private String imageUrl;
+
+    @NotNull
     private String description;
+
+    @NotNull
     private String name;
 
     public BrandDto(Brand brand) {

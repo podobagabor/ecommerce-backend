@@ -1,10 +1,8 @@
 package hu.bme.ecommercebackend.controller;
 
-import hu.bme.ecommercebackend.dto.Common.ActionResponseDto;
 import hu.bme.ecommercebackend.dto.User.*;
 import hu.bme.ecommercebackend.service.UserService;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -47,12 +45,14 @@ public class UserController {
     }
 
     @PostMapping(value = "/passwordChangeRequest")
-    public ResponseEntity<ActionResponseDto> requestPasswordChange(@RequestBody String email) {
-        return ResponseEntity.ok(userService.requestNewPassword(email));
+    public ResponseEntity<Void> requestPasswordChange(@RequestBody String email) {
+        userService.requestNewPassword(email);
+        return ResponseEntity.accepted().build();
     }
 
     @PostMapping(value = "/setNewPassword")
-    public ResponseEntity<ActionResponseDto> setNewPassword(@RequestBody NewPasswordDto newPasswordDto) {
-        return ResponseEntity.ok(userService.setNewPassword(newPasswordDto.getToken(),newPasswordDto.getNewPassword()));
+    public ResponseEntity<Void> setNewPassword(@RequestBody NewPasswordDto newPasswordDto) {
+        userService.setNewPassword(newPasswordDto.getToken(),newPasswordDto.getNewPassword());
+        return ResponseEntity.accepted().build();
     }
 }

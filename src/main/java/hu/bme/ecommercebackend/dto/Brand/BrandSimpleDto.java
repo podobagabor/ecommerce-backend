@@ -14,6 +14,8 @@ import lombok.Setter;
 public class BrandSimpleDto {
     @NotNull
     private Long id;
+
+    @NotNull
     private String name;
 
     public BrandSimpleDto(Brand brand) {

@@ -1,5 +1,6 @@
 package hu.bme.ecommercebackend.service;
 
+import hu.bme.ecommercebackend.customExceptions.EntityNotFoundException;
 import hu.bme.ecommercebackend.dto.Order.OrderCreateDto;
 import hu.bme.ecommercebackend.dto.Order.OrderDto;
 import hu.bme.ecommercebackend.model.Order;
@@ -11,7 +12,6 @@ import hu.bme.ecommercebackend.repository.OrderItemRepository;
 import hu.bme.ecommercebackend.repository.OrderRepository;
 import hu.bme.ecommercebackend.repository.UserRepository;
 import hu.bme.ecommercebackend.specification.OrderSpecification;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -54,7 +54,7 @@ public class OrderService {
     }
 
     public OrderDto getOrderDtoById(Long id) {
-        return new OrderDto(orderRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Unknown entity")));
+        return new OrderDto(orderRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Unknown order entity")));
     }
 
     public List<OrderDto> getAllOrders() {
@@ -73,7 +73,7 @@ public class OrderService {
 
     @Transactional
     public OrderDto changeOrderStatus(Long orderId, OrderStatus status) {
-        Order orderEntity = orderRepository.findById(orderId).orElseThrow(() -> new EntityNotFoundException("Unknown entity"));
+        Order orderEntity = orderRepository.findById(orderId).orElseThrow(() -> new EntityNotFoundException("Unknown order entity"));
         orderEntity.setStatus(status);
         emailService.sendEmail(orderEntity.getUser().getEmail(), "Order status changed", emailService.orderStatusChangedMessage(orderEntity.getUser().getFirstName() + " " + orderEntity.getUser().getLastName(), orderEntity));
         return new OrderDto(orderEntity);

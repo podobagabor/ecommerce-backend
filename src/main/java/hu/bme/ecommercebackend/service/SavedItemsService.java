@@ -1,10 +1,10 @@
 package hu.bme.ecommercebackend.service;
 
+import hu.bme.ecommercebackend.customExceptions.EntityNotFoundException;
 import hu.bme.ecommercebackend.dto.Product.ProductDto;
 import hu.bme.ecommercebackend.model.Product;
 import hu.bme.ecommercebackend.model.User;
 import hu.bme.ecommercebackend.repository.UserRepository;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,10 +28,10 @@ public class SavedItemsService {
 
     @Transactional
     public ProductDto addProductToSaved(Long productId, String userId) {
-        User userEntity = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("Unknown entity"));
+        User userEntity = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("Unknown product entity"));
         Product productEntity = productService.getProductById(productId);
         if (productEntity == null) {
-            throw new EntityNotFoundException("Unknown entity");
+            throw new EntityNotFoundException("Unknown product entity");
         }
         userEntity.getSavedProducts().add(productEntity);
         userRepository.save(userEntity);
@@ -40,7 +40,7 @@ public class SavedItemsService {
 
     @Transactional
     public Integer removeProductFromSaved(Long productId, String userId) {
-        User userEntity = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("Unknown entity"));
+        User userEntity = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("Unknown product entity"));
         userEntity.getSavedProducts().removeIf(product -> Objects.equals(product.getId(), productId));
         return userEntity.getSavedProducts().size();
     }

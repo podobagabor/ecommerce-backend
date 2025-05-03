@@ -14,6 +14,8 @@ import lombok.Setter;
 public class CategoryBasicDto {
     @NotNull
     private Long id;
+
+    @NotNull
     private String name;
 
     public CategoryBasicDto(Category category) {

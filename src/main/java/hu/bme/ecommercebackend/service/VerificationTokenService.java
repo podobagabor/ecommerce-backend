@@ -1,10 +1,10 @@
 package hu.bme.ecommercebackend.service;
 
+import hu.bme.ecommercebackend.customExceptions.EntityNotFoundException;
 import hu.bme.ecommercebackend.model.User;
 import hu.bme.ecommercebackend.model.VerificationToken;
 import hu.bme.ecommercebackend.model.enums.TokenType;
 import hu.bme.ecommercebackend.repository.VerificationTokenRepository;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

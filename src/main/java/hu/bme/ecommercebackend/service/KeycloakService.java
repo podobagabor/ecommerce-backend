@@ -30,7 +30,6 @@ public class KeycloakService {
                 "admin",
                 "admin-cli"
         );
-        RealmRepresentation realm = keycloak.realm("ecommerce").toRepresentation();
     }
 
     @Transactional

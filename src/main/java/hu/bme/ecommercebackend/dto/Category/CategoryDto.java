@@ -19,6 +19,7 @@ public class CategoryDto {
     @NotNull
     private Long id;
 
+    @NotNull
     private String name;
 
     @Nullable

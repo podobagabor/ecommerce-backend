@@ -37,18 +37,10 @@ public class ProductController {
         return ResponseEntity.ok(productService.getProductDtoById(id));
     }
 
-    /*
-    @GetMapping(value = "/public/getListByCategory")
-    public ResponseEntity<Page<ProductDto>> getProductListByCategory(@PathVariable Long id) {
-        return ResponseEntity.ok(productService.findAllInCategory(id));
-    }
-
-     */
-
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ProductDto> createProduct(
             @RequestPart("product") ProductCreateDto productCreateDto,
-            @RequestPart(value = "images", required = false) List<MultipartFile> images) throws JsonProcessingException {
+            @RequestPart(value = "images") List<MultipartFile> images) throws JsonProcessingException {
         return ResponseEntity.status(HttpStatus.CREATED).body(productService.createProduct(productCreateDto, images));
     }
 

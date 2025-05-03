@@ -3,6 +3,7 @@ package hu.bme.ecommercebackend.dto.Product;
 import hu.bme.ecommercebackend.dto.Brand.BrandDto;
 import hu.bme.ecommercebackend.dto.Category.CategoryDto;
 import hu.bme.ecommercebackend.model.Product;
+import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,13 +19,28 @@ public class ProductDto {
     @NotNull
     private Long id;
 
+    @NotNull
     private String name;
+
+    @NotNull
     private Integer count;
+
+    @NotNull
     private String description;
+
+    @Nullable
     private Integer discountPercentage;
+
+    @NotNull
     private List<String> images;
+
+    @NotNull
     private Integer price;
+
+    @NotNull
     private CategoryDto category;
+
+    @NotNull
     private BrandDto brand;
 
     public ProductDto(Product product) {

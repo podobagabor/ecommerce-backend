@@ -2,17 +2,23 @@ package hu.bme.ecommercebackend.dto.Order;
 
 import hu.bme.ecommercebackend.dto.Product.ProductDto;
 import hu.bme.ecommercebackend.model.OrderItem;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 public class OrderItemDto {
+
+    @NotNull
     Long id;
+
+    @NotNull
     ProductDto product;
+
+    @NotNull
     Integer quantity;
 
     public OrderItemDto(OrderItem orderItem) {
