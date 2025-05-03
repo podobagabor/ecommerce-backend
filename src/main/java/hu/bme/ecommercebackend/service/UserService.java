@@ -11,6 +11,7 @@ import hu.bme.ecommercebackend.model.enums.TokenType;
 import hu.bme.ecommercebackend.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -49,7 +50,7 @@ public class UserService {
         return new UserDtoDetailed(getUserById(id));
     }
 
-
+    @Transactional
     public UserDto createUser(UserCreateDto user) {
         String userId = keycloakService.registerUser(user.getEmail(), user.getFirstName(), user.getLastName(), user.getEmail(), user.getPassword());
         user.setId(userId);
@@ -59,12 +60,14 @@ public class UserService {
         return new UserDto(userEntity);
     }
 
+    @Transactional
     public UserDto validateUserEmail(String token) {
        User userEntity = verificationTokenService.handleValidation(token);
        keycloakService.validateEmail(userEntity.getId());
        return new UserDto(userEntity);
     }
 
+    @Transactional
     public ActionResponseDto requestNewPassword(String email) {
         //Todo: szép email
         try {
@@ -78,6 +81,7 @@ public class UserService {
 
     }
 
+    @Transactional
     public ActionResponseDto setNewPassword(String token,String password) {
         User userEntity = verificationTokenService.handleValidation(token);
         keycloakService.setNewPassword(password,userEntity.getId());
@@ -89,6 +93,7 @@ public class UserService {
         return userRepository.findAll().stream().map(UserDto::new).collect(Collectors.toList());
     }
 
+    @Transactional
     public UserDtoDetailed modifyUser(String userId,UserModifyDto userDto) {
         User userEntity = getUserById(userId);
         userEntity.setAddress(userDto.getAddress());
@@ -96,6 +101,6 @@ public class UserService {
         userEntity.setFirstName(userDto.getFirstName());
         userEntity.setLastName(userDto.getLastName());
         userEntity.setPhoneNumber(userDto.getPhone());
-        return new UserDtoDetailed(userRepository.save(userEntity));
+        return new UserDtoDetailed(userEntity);
     }
 }

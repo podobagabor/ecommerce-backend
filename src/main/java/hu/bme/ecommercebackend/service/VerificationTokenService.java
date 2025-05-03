@@ -6,6 +6,7 @@ import hu.bme.ecommercebackend.model.enums.TokenType;
 import hu.bme.ecommercebackend.repository.VerificationTokenRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -20,6 +21,7 @@ public class VerificationTokenService {
         this.verificationTokenRepository = verificationTokenRepository;
     }
 
+    @Transactional
     public String saveToken(User user, TokenType type) {
         VerificationToken existingToken = verificationTokenRepository.getVerificationTokenByUserAndType(user,type);
         if(existingToken != null) {
@@ -31,6 +33,7 @@ public class VerificationTokenService {
         return token;
     }
 
+    @Transactional
     public User handleValidation(String token) {
         try {
             VerificationToken tokenEntity = verificationTokenRepository.findById(token).orElseThrow(() -> new EntityNotFoundException("Unknown token"));

@@ -13,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
@@ -57,11 +58,13 @@ public class ProductService {
         return productRepository.getReferenceById(id);
     }
 
+    @Transactional
     public Boolean deleteProductById(Long id) {
         productRepository.deleteById(id);
         return true;
     }
 
+    @Transactional
     public ProductDto createProduct(ProductCreateDto productCreateDto, List<MultipartFile> images) {
         List<String> imageUrlList = new ArrayList<String>();
         for (MultipartFile file : images) {
@@ -82,18 +85,21 @@ public class ProductService {
         )));
     }
 
+    @Transactional
     public ProductDto reduceCount(Long id, Integer value) {
         Product productEntity = productRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Unknown entity"));
         productEntity.setCount(productEntity.getCount() - value);
-        return new ProductDto(productRepository.save(productEntity));
+        return new ProductDto(productEntity);
     }
 
+    @Transactional
     public ProductDto increaseCount(Long id, Integer value) {
         Product productEntity = productRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Unknown entity"));
         productEntity.setCount(productEntity.getCount() + value);
-        return new ProductDto(productRepository.save(productEntity));
+        return new ProductDto(productEntity);
     }
 
+    @Transactional
     public ProductDto modifyProduct(ProductModifyDto product, List<MultipartFile> newImages) {
         Product productEntity = productRepository.findById(product.getId()).orElseThrow(() -> new EntityNotFoundException("Unknown entity"));
         if (!Objects.equals(productEntity.getCategory().getId(), product.getCategoryId())) {
@@ -122,29 +128,11 @@ public class ProductService {
         productEntity.setPrice(product.getPrice());
         productEntity.setDescription(product.getDescription());
         productEntity.setDiscountPercentage(product.getDiscountPercentage());
-        return new ProductDto(productRepository.save(productEntity));
+        return new ProductDto(productEntity);
     }
 
     public Page<ProductDto> findAll(String name, List<Long> categoryId, Boolean discount, Integer minPrice, Integer maxPrice, List<Long> brandId, Pageable pageable) {
         Specification<Product> spec = ProductSpecification.filterBy(name, categoryId, discount, minPrice, maxPrice, brandId);
         return productRepository.findAll(spec, pageable).map(ProductDto::new);
-    }
-
-    public Page<ProductDto> findAllInCategory(Long selectedMainCategory,String name, List<Long> categoryId, Boolean discount, Integer minPrice, Integer maxPrice, List<Long> brandId, Pageable pageable) {
-        List<Long> selectedCategoryIds = new ArrayList<>();
-        Category mainCategory = this.categoryService.getCategoryById(selectedMainCategory);
-        selectedCategoryIds.add(mainCategory.getId());
-        selectedCategoryIds.addAll(getSubCategoryIds(mainCategory));
-        Specification<Product> spec = ProductSpecification.filterBy(name, selectedCategoryIds, discount, minPrice, maxPrice, brandId);
-        return productRepository.findAll(spec, pageable).map(ProductDto::new);
-    }
-
-    private List<Long> getSubCategoryIds(Category category) {
-        List<Long> ids = new ArrayList<>();
-        category.getSubCategories().forEach(subCategory -> {
-            ids.add(subCategory.getId());
-            ids.addAll(getSubCategoryIds(category));
-        } );
-        return ids;
     }
 }

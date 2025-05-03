@@ -11,6 +11,7 @@ import hu.bme.ecommercebackend.repository.CartRepository;
 import hu.bme.ecommercebackend.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.swing.*;
 import java.util.Collections;
@@ -23,7 +24,6 @@ public class CartService {
     private final CartRepository cartRepository;
     private final ProductService productService;
     private final UserService userService;
-    private final UserRepository userRepository;
 
     public CartService(CartRepository cartRepository,
                        ProductService productService,
@@ -32,18 +32,19 @@ public class CartService {
         this.cartRepository = cartRepository;
         this.productService = productService;
         this.userService = userService;
-        this.userRepository = userRepository;
     }
 
     public CartElement getCartElementById(Long id) {
         return cartRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Unknown entity"));
     }
 
+    @Transactional
     public Boolean deleteCartElement(Long id) {
         cartRepository.deleteById(id);
         return true;
     }
 
+    @Transactional
     public ActionResponseDto deleteCartElementFromUser(Long id, String userId) {
         User user = cartRepository.findUserById(id);
         ActionResponseDto result = new ActionResponseDto();
@@ -56,7 +57,7 @@ public class CartService {
         result.setSuccess(true);
         return result;
     }
-
+    @Transactional
     public CartElementDto modifyQuantity(Long id, Integer quantity, String userId) {
         CartElement cartElementEntity = cartRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Unknown entity"));
         if (!Objects.equals(cartElementEntity.getUser().getId(),userId)) {
@@ -66,9 +67,10 @@ public class CartService {
             throw new IllegalArgumentException("Quantity have to be at least 1.");
         }
         cartElementEntity.setQuantity(quantity);
-        return new CartElementDto(cartRepository.save(cartElementEntity));
+        return new CartElementDto(cartElementEntity);
     }
 
+    @Transactional
     public CartElementDto addToCart(String userId, CartElementCreateDto cartElement) {
         User userEntity = userService.getUserById(userId);
         Product productEntity = productService.getProductById(cartElement.getProductId());

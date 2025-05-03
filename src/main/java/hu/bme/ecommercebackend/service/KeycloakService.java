@@ -8,6 +8,7 @@ import org.keycloak.representations.idm.RealmRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +33,7 @@ public class KeycloakService {
         RealmRepresentation realm = keycloak.realm("ecommerce").toRepresentation();
     }
 
-
+    @Transactional
     public String registerUser(String username, String firstName, String lastName, String email, String password) {
         UserRepresentation user = new UserRepresentation();
 
@@ -62,7 +63,7 @@ public class KeycloakService {
             return null;
         }
     }
-
+    @Transactional
     public void setNewPassword(String password, String userId) {
         CredentialRepresentation cred = new CredentialRepresentation();
         cred.setType(CredentialRepresentation.PASSWORD);
@@ -72,6 +73,7 @@ public class KeycloakService {
         keycloak.realm("ecommerce").users().get(userId).resetPassword(cred);
     }
 
+    @Transactional
     public void validateEmail(String userId) {
         UserRepresentation userRepresentation = keycloak.realm("ecommerce").users().get(userId).toRepresentation();
         userRepresentation.setEmailVerified(true);

@@ -7,6 +7,7 @@ import hu.bme.ecommercebackend.repository.CategoryRepository;
 import hu.bme.ecommercebackend.repository.ProductRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,6 +46,7 @@ public class CategoryService {
         return newList;
     }
 
+    @Transactional
     public CategoryDto createCategoryDto(CategoryCreateDto newCategory) {
         Category categoryEntity = createCategory(newCategory.getName(), newCategory.getParentCategoryId());
         if (categoryEntity == null) {
@@ -55,7 +57,8 @@ public class CategoryService {
         return new CategoryDto(tempCategory);
     }
 
-    private Category createCategory(String name, Long parentCategoryId) {
+    @Transactional
+    protected Category createCategory(String name, Long parentCategoryId) {
         Category parentCategory = null;
         if (parentCategoryId != null) {
             parentCategory = categoryRepository.findById(parentCategoryId).orElseThrow(() -> new EntityNotFoundException("Unknown parent category id"));
@@ -69,15 +72,16 @@ public class CategoryService {
         }
     }
 
+    @Transactional
     public CategoryDto modifyCategory(CategoryModifyDto categoryModifyDto) {
         Category modifiedCategory = getCategoryById(categoryModifyDto.getId());
         Long currentParentId = modifiedCategory.getParentCategory() != null ? modifiedCategory.getParentCategory().getId() : null;
         Long newParentId = categoryModifyDto.getParentCategoryId();
 
         if (!Objects.equals(currentParentId, newParentId)) {
-            if(newParentId != null) {
+            if (newParentId != null) {
                 Category newParentCategory = getCategoryById(categoryModifyDto.getParentCategoryId());
-                if(isParentCategoryValid(newParentCategory)) {
+                if (isParentCategoryValid(newParentCategory)) {
                     modifiedCategory.setParentCategory(newParentCategory);
                 } else {
                     throw new RuntimeException("Parent not appropriate");
@@ -87,48 +91,39 @@ public class CategoryService {
             }
         }
         modifiedCategory.setName(categoryModifyDto.getName());
-        Category categoryEntity = categoryRepository.save(modifiedCategory);
-        return new CategoryDto(categoryEntity);
+        return new CategoryDto(modifiedCategory);
     }
 
-public ActionResponseDto deleteCategoryWithId(Long id) {
-    try {
-        boolean isInUse = this.productRepository.existsByCategoryId(id);
-        if (!isInUse) {
-            categoryRepository.deleteById(id);
-            return new ActionResponseDto(true, "");
-        } else {
-            return new ActionResponseDto(false, "A kategória használatban van, így törlése nem lehetséges.");
-        }
+    @Transactional
+    public ActionResponseDto deleteCategoryWithId(Long id) {
+        try {
+            boolean isInUse = this.productRepository.existsByCategoryId(id);
+            if (!isInUse) {
+                categoryRepository.deleteById(id);
+                return new ActionResponseDto(true, "");
+            } else {
+                return new ActionResponseDto(false, "A kategória használatban van, így törlése nem lehetséges.");
+            }
 
-    } catch (RuntimeException exception) {
-        return new ActionResponseDto(false, exception.getMessage());
+        } catch (RuntimeException exception) {
+            return new ActionResponseDto(false, exception.getMessage());
+        }
     }
-}
 
-public CategoryCreateDataDto getCategoryCreateData() {
-    List<Category> allCategory = this.categoryRepository.findAll();
-    List<CategoryDto> parentCategories = new ArrayList<>();
-    List<CategoryDto> childCategories = new ArrayList<>();
-    allCategory.forEach(category -> {
-        if (category.getParentCategory() == null || category.getParentCategory().getParentCategory() == null) {
-            parentCategories.add(new CategoryDto(category));
-        }
-        if (category.getParentCategory() == null && (category.getSubCategories().isEmpty() || category.getSubCategories().stream().allMatch(category1 -> category1.getSubCategories().isEmpty()))) {
-            childCategories.add(new CategoryDto(category));
-        }
-    });
-    return new CategoryCreateDataDto(parentCategories, childCategories);
-}
-
-private boolean isSubCategoriesValid(List<Category> subCategories) {
-    return (subCategories.stream().anyMatch(subCategory ->
-            subCategory.getParentCategory() != null ||
-                    subCategory.getSubCategories().stream().anyMatch(subSubCategory ->
-                            !subSubCategory.getSubCategories().isEmpty()
-                    )
-    ));
-}
+    public CategoryCreateDataDto getCategoryCreateData() {
+        List<Category> allCategory = this.categoryRepository.findAll();
+        List<CategoryDto> parentCategories = new ArrayList<>();
+        List<CategoryDto> childCategories = new ArrayList<>();
+        allCategory.forEach(category -> {
+            if (category.getParentCategory() == null || category.getParentCategory().getParentCategory() == null) {
+                parentCategories.add(new CategoryDto(category));
+            }
+            if (category.getParentCategory() == null && (category.getSubCategories().isEmpty() || category.getSubCategories().stream().allMatch(category1 -> category1.getSubCategories().isEmpty()))) {
+                childCategories.add(new CategoryDto(category));
+            }
+        });
+        return new CategoryCreateDataDto(parentCategories, childCategories);
+    }
 
     private boolean isParentCategoryValid(Category parentCategory) {
         return (parentCategory == null || (parentCategory.getParentCategory() == null) || (parentCategory.getParentCategory().getParentCategory() == null));
