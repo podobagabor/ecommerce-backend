@@ -25,15 +25,15 @@ public class SavedItemsService {
         return userRepository.findSavedProductsByUser_Id(userId).stream().map(ProductDto::new).collect(Collectors.toList());
     }
 
-    public Integer addProductToSaved(Long productId, String userId) {
+    public ProductDto addProductToSaved(Long productId, String userId) {
         User userEntity = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("Unknown entity"));
-        Product productReference = productService.getProductReferenceById(productId);
-        if (productReference == null) {
+        Product productEntity = productService.getProductById(productId);
+        if (productEntity == null) {
             throw new EntityNotFoundException("Unknown entity");
         }
-        userEntity.getSavedProducts().add(productReference);
+        userEntity.getSavedProducts().add(productEntity);
         userEntity = userRepository.save(userEntity);
-        return userEntity.getSavedProducts().size();
+        return new ProductDto(productEntity);
     }
 
     public Integer removeProductFromSaved(Long productId, String userId) {

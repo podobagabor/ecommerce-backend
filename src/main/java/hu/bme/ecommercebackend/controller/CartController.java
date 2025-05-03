@@ -1,5 +1,6 @@
 package hu.bme.ecommercebackend.controller;
 
+import hu.bme.ecommercebackend.dto.Common.ActionResponseDto;
 import hu.bme.ecommercebackend.dto.User.CartElementCreateDto;
 import hu.bme.ecommercebackend.dto.User.CartElementDto;
 import hu.bme.ecommercebackend.service.CartService;
@@ -38,7 +39,7 @@ public class CartController {
     }
 
     @DeleteMapping(value = "/delete/{id}")
-    public ResponseEntity deleteCartElement(@PathVariable Long id, @AuthenticationPrincipal Jwt jwt) {
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(cartService.deleteCartElementFromUser(id, jwt.getSubject()));
+    public ResponseEntity<ActionResponseDto> deleteCartElement(@PathVariable Long id, @AuthenticationPrincipal Jwt jwt) {
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(cartService.deleteCartElementFromUser(id, jwt.getSubject()));
     }
 }

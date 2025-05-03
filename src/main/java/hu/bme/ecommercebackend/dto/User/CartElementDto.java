@@ -2,6 +2,7 @@ package hu.bme.ecommercebackend.dto.User;
 
 import hu.bme.ecommercebackend.dto.Product.ProductDto;
 import hu.bme.ecommercebackend.model.CartElement;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,8 +11,13 @@ import java.util.Objects;
 @Getter
 @Setter
 public class CartElementDto {
+    @NotNull
     private Long id;
+
+    @NotNull
     private ProductDto productDto;
+
+    @NotNull
     private Integer quantity;
 
     public CartElementDto(CartElement cartElement) {

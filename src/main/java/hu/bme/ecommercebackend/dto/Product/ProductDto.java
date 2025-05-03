@@ -3,6 +3,7 @@ package hu.bme.ecommercebackend.dto.Product;
 import hu.bme.ecommercebackend.dto.Brand.BrandDto;
 import hu.bme.ecommercebackend.dto.Category.CategoryDto;
 import hu.bme.ecommercebackend.model.Product;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -14,7 +15,9 @@ import java.util.Objects;
 @NoArgsConstructor
 @Setter
 public class ProductDto {
+    @NotNull
     private Long id;
+
     private String name;
     private Integer count;
     private String description;

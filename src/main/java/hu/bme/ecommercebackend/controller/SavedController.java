@@ -27,7 +27,7 @@ public class SavedController {
     }
 
     @PutMapping(value = "/add/{id}")
-    public ResponseEntity<Integer> addProductToSaved(@PathVariable Long id, @AuthenticationPrincipal Jwt jwt) {
+    public ResponseEntity<ProductDto> addProductToSaved(@PathVariable Long id, @AuthenticationPrincipal Jwt jwt) {
         return ResponseEntity.status(HttpStatus.CREATED).body(savedItemsService.addProductToSaved(id,jwt.getSubject()));
     }
 

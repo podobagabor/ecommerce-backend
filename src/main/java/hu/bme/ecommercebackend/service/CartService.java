@@ -1,5 +1,6 @@
 package hu.bme.ecommercebackend.service;
 
+import hu.bme.ecommercebackend.dto.Common.ActionResponseDto;
 import hu.bme.ecommercebackend.dto.User.CartElementCreateDto;
 import hu.bme.ecommercebackend.dto.User.CartElementDto;
 import hu.bme.ecommercebackend.exception.AccessDeniedException;
@@ -11,6 +12,7 @@ import hu.bme.ecommercebackend.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
+import javax.swing.*;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -42,13 +44,17 @@ public class CartService {
         return true;
     }
 
-    public Boolean deleteCartElementFromUser(Long id, String userId) {
+    public ActionResponseDto deleteCartElementFromUser(Long id, String userId) {
         User user = cartRepository.findUserById(id);
+        ActionResponseDto result = new ActionResponseDto();
         if (!Objects.equals(user.getId(), userId)) {
+            result.setMessage("You don't have permission for this activity");
+            result.setSuccess(false);
             throw new AccessDeniedException("You don't have permission for this activity");
         }
         cartRepository.deleteById(id);
-        return true;
+        result.setSuccess(true);
+        return result;
     }
 
     public CartElementDto modifyQuantity(Long id, Integer quantity, String userId) {
