@@ -12,6 +12,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -37,6 +38,7 @@ public class ProductController {
         return ResponseEntity.ok(productService.getProductDtoById(id));
     }
 
+    @PreAuthorize("hasRole('ecommerce_admin')")
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ProductDto> createProduct(
             @RequestPart("product") ProductCreateDto productCreateDto,
@@ -44,16 +46,19 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.CREATED).body(productService.createProduct(productCreateDto, images));
     }
 
+    @PreAuthorize("hasRole('ecommerce_admin')")
     @DeleteMapping(value = "/delete/{id}")
     public ResponseEntity<Boolean> deleteProduct(@PathVariable Long id) {
         return ResponseEntity.ok(productService.deleteProductById(id));
     }
 
+    @PreAuthorize("hasRole('ecommerce_admin')")
     @PutMapping(value = "reduce/{id}/{count}")
     public ResponseEntity<ProductDto> reduceProductCount(@PathVariable Long id, @PathVariable Integer count) {
         return ResponseEntity.ok(productService.reduceCount(id, count));
     }
 
+    @PreAuthorize("hasRole('ecommerce_admin')")
     @PutMapping(value = "increase/{id}/{count}")
     public ResponseEntity<ProductDto> increaseProductCount(@PathVariable Long id, @PathVariable Integer count) {
         return ResponseEntity.ok(productService.increaseCount(id, count));
@@ -76,6 +81,7 @@ public class ProductController {
         return ResponseEntity.ok(productService.findAll(name, categoryId, discount, minPrice, maxPrice, brandId, pageable));
     }
 
+    @PreAuthorize("hasRole('ecommerce_admin')")
     @PutMapping(value = "/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ProductDto> updateProduct(@RequestPart("productModifyDto") ProductModifyDto productModifyDto,
                                                     @RequestPart(value = "newImages", required = false) List<MultipartFile> newImages) {

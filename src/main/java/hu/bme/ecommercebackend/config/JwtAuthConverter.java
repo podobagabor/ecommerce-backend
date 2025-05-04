@@ -66,6 +66,6 @@ public class JwtAuthConverter implements Converter<Jwt, AbstractAuthenticationTo
 
         resourceRoles = (Collection<String>) resource.get("roles");
 
-        return resourceRoles.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toSet());
+        return resourceRoles.stream().map(role -> new SimpleGrantedAuthority("ROLE_" + role)).collect(Collectors.toSet());
     }
 }

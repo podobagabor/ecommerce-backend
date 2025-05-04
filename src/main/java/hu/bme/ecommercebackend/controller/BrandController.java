@@ -12,6 +12,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -26,6 +27,7 @@ public class BrandController {
         this.brandService = brandService;
     }
 
+    @PreAuthorize("hasRole('ecommerce_admin')")
     @PostMapping(value = "/create",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<BrandDto> createBrand(@RequestPart("brand") BrandCreateDto brand,@RequestPart(value = "image") MultipartFile image) {
         return ResponseEntity.status(HttpStatus.CREATED).body(this.brandService.createBrand(brand,image));
@@ -53,12 +55,14 @@ public class BrandController {
         return ResponseEntity.ok(brandService.getBrandDtoById(id));
     }
 
+    @PreAuthorize("hasRole('ecommerce_admin')")
     @DeleteMapping(value = "/delete/{id}")
     public ResponseEntity<Void> deleteBrand(@PathVariable Long id) {
         brandService.deleteBrand(id);
         return ResponseEntity.accepted().build();
     }
 
+    @PreAuthorize("hasRole('ecommerce_admin')")
     @PutMapping(value = "/modify" ,consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<BrandDto> modifyBrand(@RequestPart("brand") BrandDto brand,
                                                 @RequestPart(value = "newImage",required = false) MultipartFile newImage) {

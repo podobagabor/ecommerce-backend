@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,6 +21,8 @@ public class Order {
     @Id
     @GeneratedValue
     Long id;
+
+    private LocalDateTime date;
 
     @OneToMany(mappedBy = "order", orphanRemoval = true, cascade = CascadeType.ALL)
     List<OrderItem> items = new ArrayList<OrderItem>();
@@ -57,6 +60,7 @@ public class Order {
         this.billingAddress = order.getBillingAddress();
         this.shippingAddress = order.getShippingAddress();
         this.status = order.getStatus();
+        this.date = order.getDate();
     }
 
     public Order(User user,List<OrderItem> items, Address billingAddress,Address shippingAddress) {
@@ -65,5 +69,6 @@ public class Order {
         this.billingAddress = billingAddress;
         this.shippingAddress = shippingAddress;
         this.status = OrderStatus.CREATED;
+        this.date = LocalDateTime.now();
     }
 }

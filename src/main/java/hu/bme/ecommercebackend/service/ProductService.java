@@ -8,7 +8,7 @@ import hu.bme.ecommercebackend.model.Brand;
 import hu.bme.ecommercebackend.model.Category;
 import hu.bme.ecommercebackend.model.Product;
 import hu.bme.ecommercebackend.repository.ProductRepository;
-import hu.bme.ecommercebackend.specification.ProductSpecification;
+import hu.bme.ecommercebackend.specification.EcommerceSpecification;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -132,7 +132,7 @@ public class ProductService {
     }
 
     public Page<ProductDto> findAll(String name, List<Long> categoryId, Boolean discount, Integer minPrice, Integer maxPrice, List<Long> brandId, Pageable pageable) {
-        Specification<Product> spec = ProductSpecification.filterBy(name, categoryId, discount, minPrice, maxPrice, brandId);
+        Specification<Product> spec = EcommerceSpecification.filterBy(name, categoryId, discount, minPrice, maxPrice, brandId);
         return productRepository.findAll(spec, pageable).map(ProductDto::new);
     }
 }

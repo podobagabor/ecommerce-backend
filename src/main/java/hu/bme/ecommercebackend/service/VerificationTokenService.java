@@ -5,6 +5,8 @@ import hu.bme.ecommercebackend.model.User;
 import hu.bme.ecommercebackend.model.VerificationToken;
 import hu.bme.ecommercebackend.model.enums.TokenType;
 import hu.bme.ecommercebackend.repository.VerificationTokenRepository;
+import org.apache.commons.lang3.tuple.MutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,12 +36,15 @@ public class VerificationTokenService {
     }
 
     @Transactional
-    public User handleValidation(String token) {
+    public Pair<User,Boolean> handleValidation(String token) {
         try {
             VerificationToken tokenEntity = verificationTokenRepository.findById(token).orElseThrow(() -> new EntityNotFoundException("Unknown token"));
-            User userEntity = tokenEntity.getUser();
             verificationTokenRepository.delete(tokenEntity);
-            return userEntity;
+            Pair<User, Boolean> result = new MutablePair<>(tokenEntity.getUser(),true);
+            if(tokenEntity.getExpiryDate().isBefore(LocalDateTime.now())) {
+                result.setValue(false);
+            }
+            return result;
         } catch (EntityNotFoundException e) {
             return null;
         }

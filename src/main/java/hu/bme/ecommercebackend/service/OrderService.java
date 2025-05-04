@@ -1,23 +1,24 @@
 package hu.bme.ecommercebackend.service;
 
 import hu.bme.ecommercebackend.customExceptions.EntityNotFoundException;
+import hu.bme.ecommercebackend.customExceptions.IllegalActionException;
 import hu.bme.ecommercebackend.dto.Order.OrderCreateDto;
 import hu.bme.ecommercebackend.dto.Order.OrderDto;
 import hu.bme.ecommercebackend.model.Order;
 import hu.bme.ecommercebackend.model.OrderItem;
 import hu.bme.ecommercebackend.model.User;
 import hu.bme.ecommercebackend.model.enums.OrderStatus;
-import hu.bme.ecommercebackend.repository.CartRepository;
 import hu.bme.ecommercebackend.repository.OrderItemRepository;
 import hu.bme.ecommercebackend.repository.OrderRepository;
 import hu.bme.ecommercebackend.repository.UserRepository;
-import hu.bme.ecommercebackend.specification.OrderSpecification;
+import hu.bme.ecommercebackend.specification.EcommerceSpecification;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,8 +31,7 @@ public class OrderService {
     private final UserRepository userRepository;
     private final EmailService emailService;
 
-    public OrderService(OrderRepository orderRepository, OrderItemRepository orderItemRepository, UserService userService, UserRepository userRepository,
-                        CartRepository cartRepository, EmailService emailService) {
+    public OrderService(OrderRepository orderRepository, OrderItemRepository orderItemRepository, UserService userService, UserRepository userRepository, EmailService emailService) {
         this.orderRepository = orderRepository;
         this.userService = userService;
         this.userRepository = userRepository;
@@ -43,8 +43,13 @@ public class OrderService {
         User userEntity = userService.getUserById(userId);
         Order order = new Order(userEntity, new ArrayList<>(), orderCreateDto.getBillingAddress(), orderCreateDto.getShippingAddress());
         List<OrderItem> orderItems = userEntity.getCart().stream().map(cartElement -> new OrderItem(cartElement, order)).toList();
-        userEntity.getCart().forEach(cartElement ->
-                cartElement.getProduct().setCount(cartElement.getProduct().getCount() - cartElement.getQuantity())
+        userEntity.getCart().forEach(cartElement -> {
+                    if (cartElement.getProduct().getCount() < cartElement.getQuantity()) {
+                        throw new IllegalActionException("There isn't enough product in stock.");
+                    }
+                    cartElement.getProduct().setCount(cartElement.getProduct().getCount() - cartElement.getQuantity());
+
+                }
         );
         order.setItems(orderItems);
         userEntity.getCart().clear();
@@ -61,8 +66,8 @@ public class OrderService {
         return orderRepository.findAll().stream().map(OrderDto::new).collect(Collectors.toList());
     }
 
-    public Page<OrderDto> getOrderListPage(OrderStatus status, Long id, Pageable pageable) {
-        Specification<Order> spec = OrderSpecification.filterBy(id, status);
+    public Page<OrderDto> getOrderListPage(OrderStatus status, Long id, Pageable pageable, LocalDateTime before, LocalDateTime after) {
+        Specification<Order> spec = EcommerceSpecification.filterBy(id, status,before,after);
         return orderRepository.findAll(spec, pageable).map(OrderDto::new);
     }
 

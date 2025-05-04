@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,6 +27,10 @@ public class OrderDto {
     @NotNull
     Address billingAddress;
 
+    @Getter
+    @NotNull
+    private LocalDateTime date;
+
     @NotNull
     Address shippingAddress;
 
@@ -42,5 +47,6 @@ public class OrderDto {
         this.items = order.getItems().stream().map(OrderItemDto::new).collect(Collectors.toList());
         this.status = order.getStatus();
         this.user = new UserDto(order.getUser());
+        this.date = order.getDate();
     }
 }

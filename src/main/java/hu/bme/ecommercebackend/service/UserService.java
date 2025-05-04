@@ -8,6 +8,7 @@ import hu.bme.ecommercebackend.dto.User.UserModifyDto;
 import hu.bme.ecommercebackend.model.User;
 import hu.bme.ecommercebackend.model.enums.TokenType;
 import hu.bme.ecommercebackend.repository.UserRepository;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -60,9 +61,14 @@ public class UserService {
 
     @Transactional
     public UserDto validateUserEmail(String token) {
-        User userEntity = verificationTokenService.handleValidation(token);
-        keycloakService.validateEmail(userEntity.getId());
-        return new UserDto(userEntity);
+        Pair<User, Boolean> result = verificationTokenService.handleValidation(token);
+        if (!result.getRight()) {
+            String verificationToken = verificationTokenService.saveToken(result.getLeft(), TokenType.EMAIL);
+            //TODO
+            emailService.sendEmail(result.getLeft().getEmail(), "Email validation for registration", "http://localhost:4200?userToken=" + verificationToken + "&emailVerification=true");
+        }
+        keycloakService.validateEmail(result.getLeft().getId());
+        return new UserDto(result.getLeft());
     }
 
     @Transactional
@@ -75,8 +81,14 @@ public class UserService {
 
     @Transactional
     public void setNewPassword(String token, String password) {
-        User userEntity = verificationTokenService.handleValidation(token);
-        keycloakService.setNewPassword(password, userEntity.getId());
+        Pair<User, Boolean> result = verificationTokenService.handleValidation(token);
+        if (!result.getRight()) {
+            String userToken = verificationTokenService.saveToken(result.getLeft(), TokenType.PASSWORD);
+            //TODO
+            emailService.sendEmail(result.getLeft().getEmail(), "Password reset", "http://localhost:4200?forgotPassword=true&userToken=" + userToken);
+        } else {
+            keycloakService.setNewPassword(password, result.getLeft().getId());
+        }
     }
 
 

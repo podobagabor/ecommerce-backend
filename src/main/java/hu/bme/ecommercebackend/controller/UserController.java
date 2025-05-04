@@ -4,6 +4,7 @@ import hu.bme.ecommercebackend.dto.User.*;
 import hu.bme.ecommercebackend.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +20,7 @@ public class UserController {
         this.userService = userService;
     }
 
+    @PreAuthorize("hasRole('ecommerce_admin')")
     @GetMapping(value = "/list")
     public ResponseEntity<List<UserDto>> getAllUser() {
         return ResponseEntity.ok(userService.getAllUsers());

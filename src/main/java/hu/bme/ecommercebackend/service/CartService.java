@@ -61,6 +61,9 @@ public class CartService {
         if (quantity < 1) {
             throw new IllegalActionException("Quantity have to be at least 1.");
         }
+        if(cartElementEntity.getProduct().getCount() < quantity) {
+            throw new IllegalActionException("There isn't enough product in stock.");
+        }
         cartElementEntity.setQuantity(quantity);
         return new CartElementDto(cartElementEntity);
     }
@@ -71,6 +74,9 @@ public class CartService {
         Product productEntity = productService.getProductById(cartElement.getProductId());
         if (userEntity.getCart().stream().map(CartElement::getProduct).findFirst().equals(productEntity)) {
             throw new IllegalActionException("This product is already in the cart.");
+        }
+        if(productEntity.getCount() < 1) {
+            throw new IllegalActionException("Shortage of stock.");
         }
         CartElement cartElementEntity = cartRepository.save(new CartElement(productEntity, cartElement.getQuantity(), userEntity));
         return new CartElementDto(cartElementEntity);

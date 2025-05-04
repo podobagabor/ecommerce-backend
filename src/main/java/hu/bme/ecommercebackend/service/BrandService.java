@@ -6,7 +6,7 @@ import hu.bme.ecommercebackend.dto.Brand.BrandDto;
 import hu.bme.ecommercebackend.dto.Brand.BrandSimpleDto;
 import hu.bme.ecommercebackend.model.Brand;
 import hu.bme.ecommercebackend.repository.BrandRepository;
-import hu.bme.ecommercebackend.specification.OrderSpecification;
+import hu.bme.ecommercebackend.specification.EcommerceSpecification;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -41,7 +41,7 @@ public class BrandService {
     }
 
     public Page<BrandDto> getBrandPageable(String searchKey, Pageable pageable) {
-        Specification<Brand> spec = OrderSpecification.filterBy(searchKey);
+        Specification<Brand> spec = EcommerceSpecification.filterBy(searchKey);
         return brandRepository.findAll(spec, pageable).map(
                 BrandDto::new
         );
