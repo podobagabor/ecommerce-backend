@@ -23,7 +23,6 @@ public class UserService {
     private final VerificationTokenService verificationTokenService;
 
     public UserService(UserRepository userRepository,
-                       ProductService productService,
                        KeycloakService keycloakService,
                        EmailService emailService,
                        VerificationTokenService verificationTokenService) {
@@ -55,7 +54,7 @@ public class UserService {
         user.setId(userId);
         User userEntity = userRepository.save(new User(user));
         String verificationToken = verificationTokenService.saveToken(userEntity, TokenType.EMAIL);
-        emailService.sendEmail(user.getEmail(), "Email validation for registration", "http://localhost:4200?userToken=" + verificationToken + "&emailVerification=true");
+        emailService.sendEmail(userEntity.getEmail(), "Email validation for registration", this.emailService.getVerificationMessage(userEntity.getFirstName(), verificationToken));
         return new UserDto(userEntity);
     }
 
@@ -64,8 +63,7 @@ public class UserService {
         Pair<User, Boolean> result = verificationTokenService.handleValidation(token);
         if (!result.getRight()) {
             String verificationToken = verificationTokenService.saveToken(result.getLeft(), TokenType.EMAIL);
-            //TODO
-            emailService.sendEmail(result.getLeft().getEmail(), "Email validation for registration", "http://localhost:4200?userToken=" + verificationToken + "&emailVerification=true");
+            emailService.sendEmail(result.getLeft().getEmail(), "Email validation for registration", this.emailService.getVerificationMessageAgain(result.getLeft().getFirstName(), verificationToken));
         }
         keycloakService.validateEmail(result.getLeft().getId());
         return new UserDto(result.getLeft());
@@ -73,10 +71,9 @@ public class UserService {
 
     @Transactional
     public void requestNewPassword(String email) {
-        //Todo: szép email
         User userEntity = userRepository.findByEmail(email).orElseThrow(() -> new EntityNotFoundException("Unknown user email"));
         String userToken = verificationTokenService.saveToken(userEntity, TokenType.PASSWORD);
-        emailService.sendEmail(userEntity.getEmail(), "Password reset", "http://localhost:4200?forgotPassword=true&userToken=" + userToken);
+        emailService.sendEmail(userEntity.getEmail(), "Request new password", this.emailService.getPasswordResetMessage(userEntity.getFirstName(), userToken));
     }
 
     @Transactional
@@ -84,8 +81,7 @@ public class UserService {
         Pair<User, Boolean> result = verificationTokenService.handleValidation(token);
         if (!result.getRight()) {
             String userToken = verificationTokenService.saveToken(result.getLeft(), TokenType.PASSWORD);
-            //TODO
-            emailService.sendEmail(result.getLeft().getEmail(), "Password reset", "http://localhost:4200?forgotPassword=true&userToken=" + userToken);
+            emailService.sendEmail(result.getLeft().getEmail(), "Password reset", this.emailService.getPasswordResetMessageAgain(result.getLeft().getFirstName(), userToken));
         } else {
             keycloakService.setNewPassword(password, result.getLeft().getId());
         }

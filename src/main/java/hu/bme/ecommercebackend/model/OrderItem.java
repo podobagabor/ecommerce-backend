@@ -25,13 +25,6 @@ public class OrderItem {
     @JoinColumn(name = "order_id", nullable = false)
     Order order;
 
-    public OrderItem(OrderItem orderItem) {
-        this.id = orderItem.getId();
-        this.order = orderItem.getOrder();
-        this.quantity = orderItem.getQuantity();
-        this.product = orderItem.getProduct();
-    }
-
     public OrderItem(CartElement cartElement, Order order) {
         this.product = cartElement.getProduct();
         this.quantity = cartElement.getQuantity();

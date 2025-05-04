@@ -9,6 +9,7 @@ import hu.bme.ecommercebackend.model.Category;
 import hu.bme.ecommercebackend.model.Product;
 import hu.bme.ecommercebackend.repository.ProductRepository;
 import hu.bme.ecommercebackend.specification.EcommerceSpecification;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -27,17 +28,23 @@ public class ProductService {
     private final CategoryService categoryService;
     private final BrandService brandService;
     private final ImageService imageService;
+    private final EmailService emailService;
+
+    @Value("${admin.email}")
+    private String adminEmail;
 
     public ProductService(
             ProductRepository productRepository,
             CategoryService categoryService,
             BrandService brandService,
-            ImageService imageService
+            ImageService imageService,
+            EmailService emailService
     ) {
         this.brandService = brandService;
         this.categoryService = categoryService;
         this.productRepository = productRepository;
         this.imageService = imageService;
+        this.emailService = emailService;
     }
 
     public List<ProductDto> getProductList() {
@@ -89,6 +96,9 @@ public class ProductService {
     public ProductDto reduceCount(Long id, Integer value) {
         Product productEntity = productRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Unknown product entity"));
         productEntity.setCount(productEntity.getCount() - value);
+        if (productEntity.getCount() < 3) {
+            this.emailService.sendEmail(adminEmail,"Shortage of stock",this.emailService.getShortageOfStochForAdmin(productEntity));
+        }
         return new ProductDto(productEntity);
     }
 
