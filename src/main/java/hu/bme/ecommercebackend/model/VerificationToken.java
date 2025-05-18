@@ -21,6 +21,7 @@ public class VerificationToken {
     @Getter
     private User user;
 
+    @Getter
     private TokenType type;
 
     @Getter

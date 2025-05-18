@@ -31,7 +31,7 @@ public class CartController {
         return ResponseEntity.ok(cartService.getCartOfUser(jwt.getSubject()));
     }
 
-    @PutMapping(value = "/{id}/increase/{quantity}")
+    @PutMapping(value = "/{id}/modify/{quantity}")
     public ResponseEntity<CartElementDto> changeQuantity(@PathVariable Long id, @PathVariable Integer quantity, @AuthenticationPrincipal Jwt jwt) {
         return ResponseEntity.ok(cartService.modifyQuantity(id, quantity, jwt.getSubject()));
     }

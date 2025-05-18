@@ -13,5 +13,4 @@ public interface UserRepository extends JpaRepository<User, String> {
     Set<Product> findSavedProductsByUser_Id(String id);
 
     Optional<User> findByEmail(String email);
-
 }

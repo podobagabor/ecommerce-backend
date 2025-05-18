@@ -29,7 +29,6 @@ public class EmailService {
             helper.setSubject(subject);
             helper.setText(text, true);
             helper.setFrom("test@test.com");
-
             javaMailSender.send(message);
         } catch (MessagingException e) {
             throw new RuntimeException("Error happened during mail sending.", e);

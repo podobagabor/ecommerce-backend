@@ -10,37 +10,35 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 @Service
 public class SavedItemsService {
-    private final UserRepository userRepository;
     private final ProductService productService;
+    private final UserService userService;
 
-    public SavedItemsService(UserRepository userRepository, ProductService productService) {
-        this.userRepository = userRepository;
+    public SavedItemsService(UserRepository userRepository, ProductService productService, UserService userService) {
         this.productService = productService;
+        this.userService = userService;
     }
 
     public List<ProductDto> getSavedItemsOfUser(String userId) {
-        return userRepository.findSavedProductsByUser_Id(userId).stream().map(ProductDto::new).collect(Collectors.toList());
+        return userService.getSavedItemsOfUser(userId);
     }
 
     @Transactional
     public ProductDto addProductToSaved(Long productId, String userId) {
-        User userEntity = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("Unknown product entity"));
+        User userEntity = userService.getUserById(userId);
         Product productEntity = productService.getProductById(productId);
         if (productEntity == null) {
             throw new EntityNotFoundException("Unknown product entity");
         }
         userEntity.getSavedProducts().add(productEntity);
-        userRepository.save(userEntity);
         return new ProductDto(productEntity);
     }
 
     @Transactional
     public Integer removeProductFromSaved(Long productId, String userId) {
-        User userEntity = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("Unknown product entity"));
+        User userEntity = userService.getUserById(userId);
         userEntity.getSavedProducts().removeIf(product -> Objects.equals(product.getId(), productId));
         return userEntity.getSavedProducts().size();
     }

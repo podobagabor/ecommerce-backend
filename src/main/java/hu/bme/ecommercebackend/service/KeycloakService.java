@@ -18,6 +18,17 @@ public class KeycloakService {
 
     @Value("${keycloak.auth-server-url}")
     private String keycloakUrl;
+    @Value("${keycloak.admin-client-id}")
+    private String clientId;
+
+    @Value("${keycloak.client-username}")
+    private String username;
+
+    @Value("${keycloak.client-password}")
+    private String password;
+
+    @Value("${keycloak.admin-realm}")
+    private String realm;
 
     private Keycloak keycloak;
 
@@ -25,10 +36,10 @@ public class KeycloakService {
     public void init() {
         keycloak = Keycloak.getInstance(
                 keycloakUrl,
-                "master",
-                "admin",
-                "admin",
-                "admin-cli"
+                realm,
+                username,
+                password,
+                clientId
         );
     }
 

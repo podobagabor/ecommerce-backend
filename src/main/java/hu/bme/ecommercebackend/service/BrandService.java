@@ -73,13 +73,4 @@ public class BrandService {
         }
         return new BrandDto(brandEntity);
     }
-
-    @Transactional
-    public BrandDto modifyImage(Long id, MultipartFile multipartFile) {
-        Brand brandEntity = brandRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Unknown brand entity"));
-        imageService.deleteImage(brandEntity.getImage());
-        String imageEntity = imageService.saveImage(multipartFile);
-        brandEntity.setImage(imageEntity);
-        return new BrandDto(brandEntity);
-    }
 }

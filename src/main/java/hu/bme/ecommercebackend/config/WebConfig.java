@@ -9,7 +9,6 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        //TODO: have to change the official lib
         registry.addResourceHandler("/files/**")
                 .addResourceLocations("file:files/");
     }

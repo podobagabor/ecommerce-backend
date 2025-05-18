@@ -5,7 +5,6 @@ import hu.bme.ecommercebackend.customExceptions.EntityNotFoundException;
 import hu.bme.ecommercebackend.customExceptions.IllegalActionException;
 import hu.bme.ecommercebackend.dto.User.CartElementCreateDto;
 import hu.bme.ecommercebackend.dto.User.CartElementDto;
-import hu.bme.ecommercebackend.exception.AccessDeniedException;
 import hu.bme.ecommercebackend.model.CartElement;
 import hu.bme.ecommercebackend.model.Product;
 import hu.bme.ecommercebackend.model.User;
@@ -61,7 +60,7 @@ public class CartService {
         if (quantity < 1) {
             throw new IllegalActionException("Quantity have to be at least 1.");
         }
-        if(cartElementEntity.getProduct().getCount() < quantity) {
+        if (cartElementEntity.getProduct().getCount() < quantity) {
             throw new IllegalActionException("There isn't enough product in stock.");
         }
         cartElementEntity.setQuantity(quantity);
@@ -75,7 +74,7 @@ public class CartService {
         if (userEntity.getCart().stream().map(CartElement::getProduct).findFirst().equals(productEntity)) {
             throw new IllegalActionException("This product is already in the cart.");
         }
-        if(productEntity.getCount() < 1) {
+        if (productEntity.getCount() < 1) {
             throw new IllegalActionException("Shortage of stock.");
         }
         CartElement cartElementEntity = cartRepository.save(new CartElement(productEntity, cartElement.getQuantity(), userEntity));

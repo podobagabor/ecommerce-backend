@@ -9,7 +9,6 @@ import hu.bme.ecommercebackend.model.OrderItem;
 import hu.bme.ecommercebackend.model.User;
 import hu.bme.ecommercebackend.model.enums.OrderStatus;
 import hu.bme.ecommercebackend.repository.OrderRepository;
-import hu.bme.ecommercebackend.repository.UserRepository;
 import hu.bme.ecommercebackend.specification.EcommerceSpecification;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -28,17 +27,15 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final UserService userService;
-    private final UserRepository userRepository;
     private final EmailService emailService;
     private final ProductService productService;
 
     @Value("${admin.email}")
     private String adminEmail;
 
-    public OrderService(OrderRepository orderRepository,UserService userService, UserRepository userRepository, EmailService emailService, ProductService productService) {
+    public OrderService(OrderRepository orderRepository, UserService userService, EmailService emailService, ProductService productService) {
         this.orderRepository = orderRepository;
         this.userService = userService;
-        this.userRepository = userRepository;
         this.emailService = emailService;
         this.productService = productService;
     }
@@ -52,14 +49,13 @@ public class OrderService {
                     if (cartElement.getProduct().getCount() < cartElement.getQuantity()) {
                         throw new IllegalActionException("There isn't enough product in stock.");
                     }
-                    this.productService.reduceCount(cartElement.getProduct().getId(),cartElement.getQuantity());
+                    this.productService.reduceCount(cartElement.getProduct().getId(), cartElement.getQuantity());
                 }
         );
         order.setItems(orderItems);
         userEntity.getCart().clear();
-        userRepository.save(userEntity);
         emailService.sendEmail(userEntity.getEmail(), "Order successfully created", emailService.orderCreatedMessage(userEntity.getFirstName() + " " + userEntity.getLastName(), order));
-        emailService.sendEmail(adminEmail,"New order",this.emailService.getNewOrderMessageForAdmin(order));
+        emailService.sendEmail(adminEmail, "New order", this.emailService.getNewOrderMessageForAdmin(order));
         return new OrderDto(orderRepository.save(order));
     }
 
@@ -72,7 +68,7 @@ public class OrderService {
     }
 
     public Page<OrderDto> getOrderListPage(OrderStatus status, Long id, Pageable pageable, LocalDateTime before, LocalDateTime after) {
-        Specification<Order> spec = EcommerceSpecification.filterBy(id, status,before,after);
+        Specification<Order> spec = EcommerceSpecification.filterBy(id, status, before, after);
         return orderRepository.findAll(spec, pageable).map(OrderDto::new);
     }
 

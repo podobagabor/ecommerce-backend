@@ -1,6 +1,7 @@
 package hu.bme.ecommercebackend.service;
 
 import hu.bme.ecommercebackend.customExceptions.EntityNotFoundException;
+import hu.bme.ecommercebackend.dto.Product.ProductDto;
 import hu.bme.ecommercebackend.dto.User.UserCreateDto;
 import hu.bme.ecommercebackend.dto.User.UserDto;
 import hu.bme.ecommercebackend.dto.User.UserDtoDetailed;
@@ -60,7 +61,7 @@ public class UserService {
 
     @Transactional
     public UserDto validateUserEmail(String token) {
-        Pair<User, Boolean> result = verificationTokenService.handleValidation(token);
+        Pair<User, Boolean> result = verificationTokenService.handleValidation(token, TokenType.EMAIL);
         if (!result.getRight()) {
             String verificationToken = verificationTokenService.saveToken(result.getLeft(), TokenType.EMAIL);
             emailService.sendEmail(result.getLeft().getEmail(), "Email validation for registration", this.emailService.getVerificationMessageAgain(result.getLeft().getFirstName(), verificationToken));
@@ -78,7 +79,7 @@ public class UserService {
 
     @Transactional
     public void setNewPassword(String token, String password) {
-        Pair<User, Boolean> result = verificationTokenService.handleValidation(token);
+        Pair<User, Boolean> result = verificationTokenService.handleValidation(token, TokenType.PASSWORD);
         if (!result.getRight()) {
             String userToken = verificationTokenService.saveToken(result.getLeft(), TokenType.PASSWORD);
             emailService.sendEmail(result.getLeft().getEmail(), "Password reset", this.emailService.getPasswordResetMessageAgain(result.getLeft().getFirstName(), userToken));
@@ -101,5 +102,10 @@ public class UserService {
         userEntity.setLastName(userDto.getLastName());
         userEntity.setPhoneNumber(userDto.getPhone());
         return new UserDtoDetailed(userEntity);
+    }
+
+    @Transactional
+    public List<ProductDto> getSavedItemsOfUser(String userId) {
+        return userRepository.findSavedProductsByUser_Id(userId).stream().map(ProductDto::new).collect(Collectors.toList());
     }
 }
