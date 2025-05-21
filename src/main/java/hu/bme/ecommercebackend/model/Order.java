@@ -2,10 +2,7 @@ package hu.bme.ecommercebackend.model;
 
 import hu.bme.ecommercebackend.model.enums.OrderStatus;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -17,6 +14,7 @@ import java.util.List;
 @Getter
 @Setter
 @Table(name = "orders")
+@EqualsAndHashCode
 public class Order {
     @Id
     @GeneratedValue

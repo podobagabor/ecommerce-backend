@@ -1,6 +1,7 @@
 package hu.bme.ecommercebackend.model;
 
 import jakarta.persistence.*;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -11,6 +12,7 @@ import java.util.Objects;
 @Entity
 @Setter
 @NoArgsConstructor
+@EqualsAndHashCode
 public class Brand {
     @Id
     @GeneratedValue
@@ -34,16 +36,5 @@ public class Brand {
         this.name = name;
         this.image = image;
         this.description = description;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if(this == obj) {
-            return true;
-        }
-        if(obj == null || obj.getClass() != this.getClass()) {
-            return false;
-        }
-        return (Objects.equals(this.getId(),((Brand) obj).getId()) && Objects.equals(this.getName(),((Brand) obj).getName()) && Objects.equals(this.description,((Brand) obj).getDescription()) && Objects.equals(this.image, ((Brand) obj).getImage()));
     }
 }

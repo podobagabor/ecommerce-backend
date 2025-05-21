@@ -1,20 +1,19 @@
 package hu.bme.ecommercebackend.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @Getter
 @Setter
 @Entity
+@EqualsAndHashCode
 @NoArgsConstructor
 @Table(name = "category")
 public class Category {
@@ -50,17 +49,5 @@ public class Category {
         this.parentCategory = null;
         this.name = name;
         this.id = id;
-    }
-
-
-    @Override
-    public boolean equals(Object obj) {
-        if(this == obj) {
-            return true;
-        }
-        if(obj == null || obj.getClass() != this.getClass()) {
-            return false;
-        }
-        return (Objects.equals(this.id, ((Category) obj).getId()) && Objects.equals(this.name,((Category) obj).getName()));
     }
 }

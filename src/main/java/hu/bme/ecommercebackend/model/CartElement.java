@@ -1,10 +1,7 @@
 package hu.bme.ecommercebackend.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Objects;
 
@@ -12,6 +9,7 @@ import java.util.Objects;
 @NoArgsConstructor
 @Getter
 @AllArgsConstructor
+@EqualsAndHashCode
 public class CartElement {
 
     @Id
@@ -43,15 +41,4 @@ public class CartElement {
         this.id = cartElement.id;
         this.user = cartElement.getUser();
     }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        CartElement that = (CartElement) o;
-        return Objects.equals(id, that.id)
-                && Objects.equals(product, that.product)
-                && Objects.equals(quantity, that.quantity) && Objects.equals(user, that.user);
-    }
-
 }

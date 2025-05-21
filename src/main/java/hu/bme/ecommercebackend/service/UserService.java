@@ -1,11 +1,13 @@
 package hu.bme.ecommercebackend.service;
 
 import hu.bme.ecommercebackend.customExceptions.EntityNotFoundException;
+import hu.bme.ecommercebackend.customExceptions.IllegalActionException;
 import hu.bme.ecommercebackend.dto.Product.ProductDto;
 import hu.bme.ecommercebackend.dto.User.UserCreateDto;
 import hu.bme.ecommercebackend.dto.User.UserDto;
 import hu.bme.ecommercebackend.dto.User.UserDtoDetailed;
 import hu.bme.ecommercebackend.dto.User.UserModifyDto;
+import hu.bme.ecommercebackend.model.Product;
 import hu.bme.ecommercebackend.model.User;
 import hu.bme.ecommercebackend.model.enums.TokenType;
 import hu.bme.ecommercebackend.repository.UserRepository;
@@ -14,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -34,7 +37,11 @@ public class UserService {
     }
 
     public User getUserById(String id) {
-        return userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Unknown user entity"));
+        User userEntity = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Unknown user entity"));
+        if (!userEntity.getSavedProducts().isEmpty() && userEntity.getSavedProducts().stream().anyMatch(product -> !product.getActive())) {
+            userEntity.setSavedProducts(userEntity.getSavedProducts().stream().filter(Product::getActive).collect(Collectors.toSet()));
+        }
+        return userEntity;
     }
 
     public User getUserReferenceById(String id) {
@@ -51,12 +58,17 @@ public class UserService {
 
     @Transactional
     public UserDto createUser(UserCreateDto user) {
-        String userId = keycloakService.registerUser(user.getEmail(), user.getFirstName(), user.getLastName(), user.getEmail(), user.getPassword());
-        user.setId(userId);
-        User userEntity = userRepository.save(new User(user));
-        String verificationToken = verificationTokenService.saveToken(userEntity, TokenType.EMAIL);
-        emailService.sendEmail(userEntity.getEmail(), "Email validation for registration", this.emailService.getVerificationMessage(userEntity.getFirstName(), verificationToken));
-        return new UserDto(userEntity);
+        Boolean emailExist = userRepository.existsByEmail(user.getEmail());
+        if (emailExist) {
+            throw new IllegalActionException("Ez az e-mailcím már használva van");
+        } else {
+            String userId = keycloakService.registerUser(user.getEmail(), user.getFirstName(), user.getLastName(), user.getEmail(), user.getPassword());
+            user.setId(userId);
+            User userEntity = userRepository.save(new User(user));
+            String verificationToken = verificationTokenService.saveToken(userEntity, TokenType.EMAIL);
+            emailService.sendEmail(userEntity.getEmail(), "Email validation for registration", this.emailService.getVerificationMessage(userEntity.getFirstName(), verificationToken));
+            return new UserDto(userEntity);
+        }
     }
 
     @Transactional
@@ -96,16 +108,20 @@ public class UserService {
     @Transactional
     public UserDtoDetailed modifyUser(String userId, UserModifyDto userDto) {
         User userEntity = getUserById(userId);
+        if(!Objects.equals(userEntity.getEmail(), userDto.getEmail())) {
+            this.keycloakService.changeEmail(userId,userDto.getEmail());
+        }
         userEntity.setAddress(userDto.getAddress());
         userEntity.setEmail(userDto.getEmail());
         userEntity.setFirstName(userDto.getFirstName());
         userEntity.setLastName(userDto.getLastName());
         userEntity.setPhoneNumber(userDto.getPhone());
+        userEntity.setGender(userDto.getGender());
         return new UserDtoDetailed(userEntity);
     }
 
     @Transactional
     public List<ProductDto> getSavedItemsOfUser(String userId) {
-        return userRepository.findSavedProductsByUser_Id(userId).stream().map(ProductDto::new).collect(Collectors.toList());
+        return userRepository.findSavedProductsByUser_Id(userId).stream().filter(Product::getActive).map(ProductDto::new).collect(Collectors.toList());
     }
 }

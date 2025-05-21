@@ -4,10 +4,7 @@ import hu.bme.ecommercebackend.dto.User.UserCreateDto;
 import hu.bme.ecommercebackend.model.enums.Gender;
 import hu.bme.ecommercebackend.model.enums.Role;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -18,6 +15,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
+@EqualsAndHashCode
 public class User {
     @Id
     private String id;
@@ -38,6 +36,7 @@ public class User {
     @Setter
     private Set<Product> savedProducts;
 
+    @Setter
     private Gender gender;
 
     @Setter
@@ -77,18 +76,5 @@ public class User {
         this.orders = user.getOrders().stream().map(Order::new).collect(Collectors.toList());
         this.gender = user.getGender();
         this.phoneNumber = user.getPhoneNumber();
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
-        return Objects.equals(id, user.id) && role == user.role && Objects.equals(email, user.email) && Objects.equals(firstName, user.firstName) && Objects.equals(lastName, user.lastName) && Objects.equals(phoneNumber, user.phoneNumber) && Objects.equals(savedProducts, user.savedProducts) && gender == user.gender && Objects.equals(cart, user.cart) && Objects.equals(orders, user.orders) && Objects.equals(address, user.address);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, role, email, firstName, lastName, phoneNumber, savedProducts, gender, cart, orders, address);
     }
 }

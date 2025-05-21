@@ -89,4 +89,12 @@ public class KeycloakService {
         userRepresentation.setEmailVerified(true);
         keycloak.realm("ecommerce").users().get(userId).update(userRepresentation);
     }
+
+    @Transactional
+    public void changeEmail(String userId, String email) {
+        UserRepresentation userRepresentation = keycloak.realm("ecommerce").users().get(userId).toRepresentation();
+        userRepresentation.setUsername(email);
+        userRepresentation.setEmail(email);
+        keycloak.realm("ecommerce").users().get(userId).update(userRepresentation);
+    }
 }

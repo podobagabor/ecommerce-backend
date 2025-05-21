@@ -2,18 +2,19 @@ package hu.bme.ecommercebackend.model;
 
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @Getter
 @Entity
 @Setter
 @NoArgsConstructor
+@EqualsAndHashCode
 public class Product {
     @Id
     @GeneratedValue
@@ -100,18 +101,5 @@ public class Product {
         this.description = product.getDescription();
         this.category = product.getCategory();
         this.active = product.getActive();
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Product product = (Product) o;
-        return Objects.equals(id, product.id) && Objects.equals(name, product.name) && Objects.equals(count, product.count) && Objects.equals(description, product.description) && Objects.equals(discountPercentage, product.discountPercentage) && Objects.equals(images, product.images) && Objects.equals(price, product.price) && Objects.equals(category, product.category) && Objects.equals(brand, product.brand) && Objects.equals(active, product.active);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, name, count, description, discountPercentage, images, price, category, brand, active);
     }
 }

@@ -118,9 +118,9 @@ public class UserServiceTest {
 
     @Test
     void testModifyUser() {
-        User modifiedUser = new User("asdf", Role.USER,"testEmail1@email-new.com","Test1FirstNew","Test1LastNew","0640121214", Set.of(),Gender.FEMALE, new ArrayList<>(), new ArrayList<>(),new Address("HU","Dabas","Temető utca","23","2371"));;
-        when(userRepository.findById(modifiedUser.getId())).thenReturn(Optional.ofNullable(modifiedUser));
-
+        User modifiedUser = new User(mockUser1.getId(), mockUser1.getRole(),"testEmail1@email-new.com","Test1FirstNew","Test1LastNew","0640121214",mockUser1.getSavedProducts(), mockUser1.getGender(), mockUser1.getCart(),mockUser1.getOrders(),new Address("HU","Dabas","Temető utca","23","2371"));;
+        when(userRepository.findById(modifiedUser.getId())).thenReturn(Optional.ofNullable(mockUser1));
+        doNothing().when(keycloakService).changeEmail(modifiedUser.getId(),modifiedUser.getEmail());
         UserDtoDetailed user = userService.modifyUser(modifiedUser.getId(),new UserModifyDto(modifiedUser.getEmail(),modifiedUser.getFirstName(),modifiedUser.getLastName(),modifiedUser.getGender(),modifiedUser.getAddress(),modifiedUser.getPhoneNumber()));
 
         assertEquals(user,new UserDtoDetailed(modifiedUser));

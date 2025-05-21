@@ -2,15 +2,15 @@ package hu.bme.ecommercebackend.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.util.Objects;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Entity
+@EqualsAndHashCode
 public class OrderItem {
     @Id
     @GeneratedValue
@@ -31,18 +31,10 @@ public class OrderItem {
         this.order = order;
     }
 
-    public OrderItem(Product product,Integer quantity ,Order order) {
+    public OrderItem(Product product, Integer quantity, Order order) {
         this.product = product;
         this.quantity = quantity;
         this.order = order;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        OrderItem orderItem = (OrderItem) o;
-        return Objects.equals(id, orderItem.id) && Objects.equals(product, orderItem.product) && Objects.equals(quantity, orderItem.quantity) && Objects.equals(order, orderItem.order);
     }
 }
 

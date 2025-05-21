@@ -71,7 +71,7 @@ public class VerificationTokenServiceTest {
     @Test
     void handleValidationDateNotTest() {
         when(verificationTokenRepository.findById(emailTokenExpired.getToken())).thenReturn(Optional.ofNullable(emailTokenExpired));
-        doNothing().when(verificationTokenRepository).delete(emailToken);
+        doNothing().when(verificationTokenRepository).delete(emailTokenExpired);
 
         Pair<User, Boolean> currentToken = verificationTokenService.handleValidation(emailTokenExpired.getToken(), emailTokenExpired.getType());
 
