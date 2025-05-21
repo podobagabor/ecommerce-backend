@@ -6,6 +6,7 @@ import hu.bme.ecommercebackend.model.User;
 import hu.bme.ecommercebackend.model.enums.Gender;
 import hu.bme.ecommercebackend.model.enums.Role;
 import jakarta.validation.constraints.NotNull;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,6 +15,7 @@ import java.util.stream.Collectors;
 
 @Getter
 @Setter
+@EqualsAndHashCode
 public class UserDtoDetailed {
 
     @NotNull
@@ -42,7 +44,9 @@ public class UserDtoDetailed {
     @NotNull
     private Gender gender;
 
+    @NotNull
     private String phone;
+
 
     public UserDtoDetailed(User user) {
         this.address = user.getAddress();

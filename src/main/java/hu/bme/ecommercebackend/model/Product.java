@@ -38,6 +38,8 @@ public class Product {
     @ManyToOne
     private Brand brand;
 
+    private Boolean active;
+
     public Product(
             Long id,
             String name,
@@ -49,7 +51,7 @@ public class Product {
             Category category,
             Brand brand
     ) {
-        if(id != null) {
+        if (id != null) {
             this.id = id;
         }
         this.brand = brand;
@@ -60,6 +62,7 @@ public class Product {
         this.images = images;
         this.price = price;
         this.count = count;
+        this.active = true;
     }
 
     public Product(
@@ -83,6 +86,7 @@ public class Product {
         this.images = images != null ? images : product.getImages();
         this.price = price != null ? price : product.getPrice();
         this.count = count != null ? count : product.getCount();
+        this.active = true;
     }
 
     public Product(Product product) {
@@ -95,26 +99,19 @@ public class Product {
         this.discountPercentage = product.getDiscountPercentage();
         this.description = product.getDescription();
         this.category = product.getCategory();
+        this.active = product.getActive();
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null || obj.getClass() != this.getClass()) {
-            return false;
-        }
-        return (
-                        Objects.equals(this.id, ((Product) obj).getId()) &&
-                        Objects.equals(this.name, ((Product) obj).getName()) &&
-                        Objects.equals(this.description, ((Product) obj).getDescription()) &&
-                        Objects.equals(this.brand, ((Product) obj).getBrand()) &&
-                        Objects.equals(this.category, ((Product) obj).getCategory()) &&
-                        Objects.equals(this.count, ((Product) obj).getCount()) &&
-                        Objects.equals(this.price, ((Product) obj).getPrice()) &&
-                        Objects.equals(this.images, ((Product) obj).getImages()) &&
-                        Objects.equals(this.discountPercentage, ((Product) obj).getDiscountPercentage())
-        );
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Product product = (Product) o;
+        return Objects.equals(id, product.id) && Objects.equals(name, product.name) && Objects.equals(count, product.count) && Objects.equals(description, product.description) && Objects.equals(discountPercentage, product.discountPercentage) && Objects.equals(images, product.images) && Objects.equals(price, product.price) && Objects.equals(category, product.category) && Objects.equals(brand, product.brand) && Objects.equals(active, product.active);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, count, description, discountPercentage, images, price, category, brand, active);
     }
 }

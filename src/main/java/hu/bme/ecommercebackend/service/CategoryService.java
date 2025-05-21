@@ -95,10 +95,14 @@ public class CategoryService {
 
     @Transactional
     public void deleteCategoryWithId(Long id) {
-        boolean isInUse = this.productRepository.existsByCategoryId(id);
-        if (!isInUse) {
-            categoryRepository.deleteById(id);
-        } else {
+        try {
+            boolean isDeletable = isCategoryDeletable(id);
+            if (isDeletable) {
+                categoryRepository.deleteById(id);
+            } else {
+                throw new IllegalActionException("");
+            }
+        } catch (Throwable e) {
             throw new IllegalActionException("Category is in use, or there is no category for the given id.");
         }
     }
@@ -120,5 +124,23 @@ public class CategoryService {
 
     private boolean isParentCategoryValid(Category parentCategory) {
         return (parentCategory == null || (parentCategory.getParentCategory() == null) || (parentCategory.getParentCategory().getParentCategory() == null));
+    }
+
+    public Boolean isCategoryDeletable(Long categoryId) {
+        Category category = getCategoryById(categoryId);
+        List<Long> connectedCategories = new ArrayList<Long>(getSubCategoryIds(category));
+        return !this.productRepository.existsByCategoryIdIn(connectedCategories);
+    }
+
+    public List<Long> getSubCategoryIds(Category category) {
+        List<Long> categoryIds = new ArrayList<Long>();
+        categoryIds.add(category.getId());
+        category.getSubCategories().forEach( subCategory -> {
+            categoryIds.add(subCategory.getId());
+            if(!subCategory.getSubCategories().isEmpty()) {
+                categoryIds.addAll(getSubCategoryIds(subCategory));
+            }
+        });
+        return categoryIds;
     }
 }

@@ -4,12 +4,14 @@ import hu.bme.ecommercebackend.dto.Product.ProductDto;
 import hu.bme.ecommercebackend.model.OrderItem;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
+@EqualsAndHashCode
 public class OrderItemDto {
 
     @NotNull

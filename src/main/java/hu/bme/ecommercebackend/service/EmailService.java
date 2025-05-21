@@ -48,7 +48,7 @@ public class EmailService {
     }
 
     public String getVerificationMessage(String name, String token) {
-        return "Dear " + name + "<br>You successfully registered to our webshop! Just one step remained:<br><br><strong>You have to verify your email!</string><br><br>Verify your email by clicking on this link: " + frontendUrl + "/" + token + "<br><br>Best regard,<br>Team of E-commerce webshop";
+        return "Dear " + name + "<br>You successfully registered to our webshop! Just one step remained:<br><br><strong>You have to verify your email!</string><br><br>Verify your email by clicking on this link: " + frontendUrl + "?emailVerification=true&userToken=" + token + "<br><br>Best regard,<br>Team of E-commerce webshop";
     }
 
     public String getPasswordResetMessage(String name, String token) {

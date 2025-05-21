@@ -1,6 +1,7 @@
 package hu.bme.ecommercebackend.service;
 
 import hu.bme.ecommercebackend.customExceptions.EntityNotFoundException;
+import hu.bme.ecommercebackend.dto.Category.CategoryDetailedDto;
 import hu.bme.ecommercebackend.dto.Product.ProductCreateDto;
 import hu.bme.ecommercebackend.dto.Product.ProductDto;
 import hu.bme.ecommercebackend.dto.Product.ProductModifyDto;
@@ -67,7 +68,8 @@ public class ProductService {
 
     @Transactional
     public Boolean deleteProductById(Long id) {
-        productRepository.deleteById(id);
+        Product productEntity = getProductById(id);
+        productEntity.setActive(false);
         return true;
     }
 
@@ -123,7 +125,7 @@ public class ProductService {
         product.getImages().forEach(imageModifyDto -> {
             if (imageModifyDto.getDeleted()) {
                 productEntity.setImages(productEntity.getImages().stream().filter(
-                        imageUrl -> imageUrl.equals(imageModifyDto.getUrl())
+                        imageUrl -> !imageUrl.equals(imageModifyDto.getUrl())
                 ).collect(Collectors.toCollection(ArrayList::new)));
                 this.imageService.deleteImage(imageModifyDto.getUrl());
             }
@@ -145,4 +147,5 @@ public class ProductService {
         Specification<Product> spec = EcommerceSpecification.filterBy(name, categoryId, discount, minPrice, maxPrice, brandId);
         return productRepository.findAll(spec, pageable).map(ProductDto::new);
     }
+
 }

@@ -31,6 +31,12 @@ public class OrderItem {
         this.order = order;
     }
 
+    public OrderItem(Product product,Integer quantity ,Order order) {
+        this.product = product;
+        this.quantity = quantity;
+        this.order = order;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

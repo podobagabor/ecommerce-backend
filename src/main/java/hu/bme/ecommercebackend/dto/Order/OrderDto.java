@@ -6,6 +6,7 @@ import hu.bme.ecommercebackend.model.Order;
 import hu.bme.ecommercebackend.model.enums.OrderStatus;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -16,6 +17,7 @@ import java.util.stream.Collectors;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode
 public class OrderDto {
 
     @NotNull

@@ -1,9 +1,6 @@
 package hu.bme.ecommercebackend.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -23,6 +20,7 @@ public class Brand {
 
     private String image;
 
+    @Column(columnDefinition = "TEXT")
     private String description;
 
     public Brand(String name, String image, String description) {

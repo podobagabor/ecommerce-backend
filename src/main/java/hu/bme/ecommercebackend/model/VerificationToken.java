@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+@Getter
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
@@ -18,12 +19,9 @@ public class VerificationToken {
     private String token;
 
     @OneToOne
-    @Getter
     private User user;
 
-    @Getter
     private TokenType type;
 
-    @Getter
     private LocalDateTime expiryDate;
 }

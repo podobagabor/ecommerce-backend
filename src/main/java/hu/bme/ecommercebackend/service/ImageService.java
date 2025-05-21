@@ -15,8 +15,6 @@ import java.util.stream.Stream;
 public class ImageService {
 
     public ImageService() {
-        //Todo:kitalálni hogy mizu legyen vele
-       // resetFiles();
     }
 
     public String saveImage(MultipartFile image) {

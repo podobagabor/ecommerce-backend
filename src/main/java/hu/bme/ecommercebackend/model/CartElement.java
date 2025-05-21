@@ -49,7 +49,9 @@ public class CartElement {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         CartElement that = (CartElement) o;
-        return Objects.equals(id, that.id) && Objects.equals(product, that.product) && Objects.equals(quantity, that.quantity) && Objects.equals(user, that.user);
+        return Objects.equals(id, that.id)
+                && Objects.equals(product, that.product)
+                && Objects.equals(quantity, that.quantity) && Objects.equals(user, that.user);
     }
 
 }

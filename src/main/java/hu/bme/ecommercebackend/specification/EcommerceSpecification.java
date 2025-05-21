@@ -50,7 +50,7 @@ public class EcommerceSpecification {
     public static Specification<Product> filterBy(String name, List<Long> categoryId, Boolean discount, Integer minPrice, Integer maxPrice, List<Long> brandId) {
         return (root, criteriaQuery, criteriaBuilder) -> {
             final List<Predicate> predicates = new ArrayList<>();
-
+            predicates.add(criteriaBuilder.isTrue(root.get("active")));
             if (name != null) {
                 predicates.add(criteriaBuilder.like( criteriaBuilder.lower(root.get("name")), "%" + name.toLowerCase() + "%"));
             }

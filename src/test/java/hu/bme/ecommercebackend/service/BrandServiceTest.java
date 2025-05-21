@@ -2,6 +2,7 @@ package hu.bme.ecommercebackend.service;
 
 import hu.bme.ecommercebackend.dto.Brand.BrandCreateDto;
 import hu.bme.ecommercebackend.dto.Brand.BrandDto;
+import hu.bme.ecommercebackend.dto.Brand.BrandSimpleDto;
 import hu.bme.ecommercebackend.model.Brand;
 import hu.bme.ecommercebackend.repository.BrandRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -58,11 +59,11 @@ public class BrandServiceTest {
         );
         when(brandRepository.findAll()).thenReturn(mockBrandList);
 
-        List<BrandDto> brandList = brandService.getBrandList();
+        List<BrandSimpleDto> brandList = brandService.getBrandList();
 
         assertEquals(mockBrandList.size(), brandList.size());
         for (int i = 0; i < brandList.size(); i++) {
-            assertEquals(brandList.get(i), new BrandDto(mockBrandList.get(i)));
+            assertEquals(brandList.get(i), new BrandSimpleDto(mockBrandList.get(i)));
         }
     }
 
@@ -77,12 +78,20 @@ public class BrandServiceTest {
     }
 
     @Test
-    void testModifyBrand() {
-        Brand modifiedBrand = new Brand(mockBrand1.getId(), mockBrand1.getName() + " - new", mockBrand1.getImage(), mockBrand1.getDescription());
-        when(brandRepository.save(modifiedBrand)).thenReturn(modifiedBrand);
+    void testGetBrandById() {
         when(brandRepository.findById(mockBrand1.getId())).thenReturn(Optional.ofNullable(mockBrand1));
 
-        BrandDto brandDto = brandService.modifyBrand(new BrandDto(modifiedBrand));
+        Brand brand = brandService.getBrandById(mockBrand1.getId());
+
+        assertEquals(brand, mockBrand1);
+    }
+
+    @Test
+    void testModifyBrand() {
+        Brand modifiedBrand = new Brand(mockBrand1.getId(), mockBrand1.getName() + " - new", mockBrand1.getImage(), mockBrand1.getDescription());
+        when(brandRepository.findById(mockBrand1.getId())).thenReturn(Optional.ofNullable(mockBrand1));
+
+        BrandDto brandDto = brandService.modifyBrand(new BrandDto(modifiedBrand), null);
         assertEquals(brandDto, new BrandDto(modifiedBrand));
     }
 
@@ -91,21 +100,6 @@ public class BrandServiceTest {
         doNothing().when(brandRepository).deleteById(mockBrand1.getId());
         when(brandRepository.findById(mockBrand1.getId())).thenReturn(Optional.ofNullable(mockBrand1));
         doNothing().when(imageService).deleteImage(mockBrand1.getImage());
-
-        Boolean result = brandService.deleteBrand(mockBrand1.getId());
-
-        assertEquals(result, true);
-    }
-
-    @Test
-    void testModifyImage() {
-        when(brandRepository.findById(mockBrand1.getId())).thenReturn(Optional.ofNullable(mockBrand1));
-        when(brandRepository.save(mockBrand1)).thenReturn(mockBrand1);
-        when(imageService.saveImage(null)).thenReturn(mockBrand1.getImage());
-        doNothing().when(imageService).deleteImage(mockBrand1.getImage());
-
-        BrandDto modifiedBrand = brandService.modifyImage(mockBrand1.getId(), null);
-
-        assertEquals(modifiedBrand, new BrandDto(mockBrand1));
+        brandService.deleteBrand(mockBrand1.getId());
     }
 }
