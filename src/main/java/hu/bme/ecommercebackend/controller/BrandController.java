@@ -28,9 +28,9 @@ public class BrandController {
     }
 
     @PreAuthorize("hasRole('ecommerce_admin')")
-    @PostMapping(value = "/create",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<BrandDto> createBrand(@RequestPart("brand") BrandCreateDto brand,@RequestPart(value = "image") MultipartFile image) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(this.brandService.createBrand(brand,image));
+    @PostMapping(value = "/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<BrandDto> createBrand(@RequestPart("brand") BrandCreateDto brand, @RequestPart(value = "image") MultipartFile image) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(this.brandService.createBrand(brand, image));
     }
 
     @GetMapping(value = "/list")
@@ -41,8 +41,8 @@ public class BrandController {
             @RequestParam(defaultValue = "id") String sortId,
             @RequestParam(required = false) Sort.Direction sortDirection
     ) {
-        Pageable pageable = PageRequest.of(page,size, sortDirection == null ? Sort.Direction.ASC : sortDirection , sortId);
-        return ResponseEntity.ok(this.brandService.getBrandPageable(name,pageable));
+        Pageable pageable = PageRequest.of(page, size, sortDirection == null ? Sort.Direction.ASC : sortDirection, sortId);
+        return ResponseEntity.ok(this.brandService.getBrandPageable(name, pageable));
     }
 
     @GetMapping()
@@ -63,10 +63,10 @@ public class BrandController {
     }
 
     @PreAuthorize("hasRole('ecommerce_admin')")
-    @PutMapping(value = "/modify" ,consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PutMapping(value = "/modify", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<BrandDto> modifyBrand(@RequestPart("brand") BrandDto brand,
-                                                @RequestPart(value = "newImage",required = false) MultipartFile newImage) {
-        return ResponseEntity.ok(brandService.modifyBrand(brand,newImage));
+                                                @RequestPart(value = "newImage", required = false) MultipartFile newImage) {
+        return ResponseEntity.ok(brandService.modifyBrand(brand, newImage));
     }
 
 }

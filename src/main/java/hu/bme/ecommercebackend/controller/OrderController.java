@@ -58,7 +58,7 @@ public class OrderController {
         LocalDateTime beforeTime = LocalDateTime.parse(before);
         LocalDateTime afterTimer = LocalDateTime.parse(after);
         Pageable pageable = PageRequest.of(page, size, sortDirection == null ? Sort.Direction.ASC : sortDirection, sortId);
-        return ResponseEntity.ok(orderService.getOrderListPage(status, id, pageable,beforeTime,afterTimer));
+        return ResponseEntity.ok(orderService.getOrderListPage(status, id, pageable, beforeTime, afterTimer));
     }
 
     @PreAuthorize("hasRole('ecommerce_admin')")

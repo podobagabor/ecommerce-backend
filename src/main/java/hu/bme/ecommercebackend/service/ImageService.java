@@ -18,7 +18,7 @@ public class ImageService {
     }
 
     public String saveImage(MultipartFile image) {
-        if(image != null) {
+        if (image != null) {
             try {
                 String uplodDir = "files/";
                 Files.createDirectories(Paths.get(uplodDir));
@@ -35,7 +35,7 @@ public class ImageService {
     }
 
     public void deleteImage(String url) {
-        if(url != null) {
+        if (url != null) {
             try {
                 Path filePath = Paths.get("files", url);
                 Files.deleteIfExists(filePath);
@@ -53,7 +53,7 @@ public class ImageService {
                 try {
                     Files.delete(file);
                 } catch (IOException e) {
-                    throw new RuntimeException("Delete failed: " + file.toString(), e);
+                    throw new RuntimeException("Delete failed: " + file, e);
                 }
             });
         } catch (IOException e) {

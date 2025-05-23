@@ -16,22 +16,22 @@ public class EcommerceSpecification {
     public static Specification<Order> filterBy(Long searchId, OrderStatus status, LocalDateTime before, LocalDateTime after) {
         return (root, criteriaQuery, criteriaBuilder) -> {
             final List<Predicate> predicates = new ArrayList<>();
-            if(searchId != null) {
+            if (searchId != null) {
                 Expression<String> idAsString = criteriaBuilder.function(
                         "text",
                         String.class,
                         root.get("id")
                 );
-                predicates.add(criteriaBuilder.like( idAsString,"%" + searchId + "%"));
+                predicates.add(criteriaBuilder.like(idAsString, "%" + searchId + "%"));
             }
-            if(status != null) {
-                predicates.add(criteriaBuilder.equal(root.get("status"),status));
+            if (status != null) {
+                predicates.add(criteriaBuilder.equal(root.get("status"), status));
             }
-            if(before != null) {
-                predicates.add( criteriaBuilder.lessThan(root.get("date"), before));
+            if (before != null) {
+                predicates.add(criteriaBuilder.lessThan(root.get("date"), before));
             }
-            if(after != null) {
-                predicates.add( criteriaBuilder.greaterThan(root.get("date"), after));
+            if (after != null) {
+                predicates.add(criteriaBuilder.greaterThan(root.get("date"), after));
             }
             return criteriaBuilder.and(predicates.toArray(Predicate[]::new));
         };
@@ -40,8 +40,8 @@ public class EcommerceSpecification {
     public static Specification<Brand> filterBy(String name) {
         return (root, criteriaQuery, criteriaBuilder) -> {
             final List<Predicate> predicates = new ArrayList<>();
-            if(name != null) {
-                predicates.add(criteriaBuilder.like( criteriaBuilder.lower(root.get("name")),"%" + name.toLowerCase() + "%"));
+            if (name != null) {
+                predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("name")), "%" + name.toLowerCase() + "%"));
             }
             return criteriaBuilder.and(predicates.toArray(Predicate[]::new));
         };
@@ -52,7 +52,7 @@ public class EcommerceSpecification {
             final List<Predicate> predicates = new ArrayList<>();
             predicates.add(criteriaBuilder.isTrue(root.get("active")));
             if (name != null) {
-                predicates.add(criteriaBuilder.like( criteriaBuilder.lower(root.get("name")), "%" + name.toLowerCase() + "%"));
+                predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("name")), "%" + name.toLowerCase() + "%"));
             }
             if (categoryId != null) {
                 predicates.add(root.get("category").get("id").in(categoryId));

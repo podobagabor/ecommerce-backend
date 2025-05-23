@@ -4,7 +4,6 @@ import jakarta.annotation.PostConstruct;
 import jakarta.ws.rs.core.Response;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.representations.idm.CredentialRepresentation;
-import org.keycloak.representations.idm.RealmRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -73,6 +72,7 @@ public class KeycloakService {
             return null;
         }
     }
+
     @Transactional
     public void setNewPassword(String password, String userId) {
         CredentialRepresentation cred = new CredentialRepresentation();

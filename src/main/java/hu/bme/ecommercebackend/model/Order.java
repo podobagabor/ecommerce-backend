@@ -61,7 +61,7 @@ public class Order {
         this.date = order.getDate();
     }
 
-    public Order(User user,List<OrderItem> items, Address billingAddress,Address shippingAddress) {
+    public Order(User user, List<OrderItem> items, Address billingAddress, Address shippingAddress) {
         this.user = user;
         this.items = items;
         this.billingAddress = billingAddress;

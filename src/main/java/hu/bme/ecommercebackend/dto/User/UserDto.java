@@ -5,13 +5,13 @@ import hu.bme.ecommercebackend.model.User;
 import hu.bme.ecommercebackend.model.enums.Gender;
 import hu.bme.ecommercebackend.model.enums.Role;
 import jakarta.validation.constraints.NotNull;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Objects;
-
 @Getter
 @Setter
+@EqualsAndHashCode
 public class UserDto {
 
     @NotNull
@@ -53,18 +53,5 @@ public class UserDto {
         this.savedNumber = user.getSavedProducts().size();
         this.gender = user.getGender();
         this.phone = user.getPhoneNumber();
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        UserDto userDto = (UserDto) o;
-        return Objects.equals(id, userDto.id) && role == userDto.role && Objects.equals(email, userDto.email) && Objects.equals(firsName, userDto.firsName) && Objects.equals(lastName, userDto.lastName) && Objects.equals(savedNumber, userDto.savedNumber) && Objects.equals(cartNumber, userDto.cartNumber) && Objects.equals(address, userDto.address) && gender == userDto.gender && Objects.equals(phone, userDto.phone);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, role, email, firsName, lastName, savedNumber, cartNumber, address, gender, phone);
     }
 }

@@ -5,6 +5,7 @@ import hu.bme.ecommercebackend.dto.Category.CategoryDto;
 import hu.bme.ecommercebackend.model.Product;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -15,6 +16,7 @@ import java.util.Objects;
 @Getter
 @NoArgsConstructor
 @Setter
+@EqualsAndHashCode
 public class ProductDto {
     @NotNull
     private Long id;
@@ -53,21 +55,6 @@ public class ProductDto {
         this.category = new CategoryDto(product.getCategory());
         this.discountPercentage = product.getDiscountPercentage();
         this.images = product.getImages();
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if(this == obj) return true;
-        if(obj == null || obj.getClass() != this.getClass()) return false;
-        return (Objects.equals(this.id, ((ProductDto) obj).getId()) &&
-                Objects.equals(this.name, ((ProductDto) obj).getName()) &&
-                Objects.equals(this.description, ((ProductDto) obj).getDescription()) &&
-                Objects.equals(this.brand, ((ProductDto) obj).getBrand()) &&
-                Objects.equals(this.count, ((ProductDto) obj).getCount()) &&
-                Objects.equals(this.price, ((ProductDto) obj).getPrice()) &&
-                Objects.equals(this.category, ((ProductDto) obj).getCategory()) &&
-                Objects.equals(this.discountPercentage, ((ProductDto) obj).getDiscountPercentage()) &&
-                Objects.equals(this.images, ((ProductDto) obj).getImages()));
     }
 }
 

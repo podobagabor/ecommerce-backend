@@ -7,7 +7,6 @@ import hu.bme.ecommercebackend.model.*;
 import hu.bme.ecommercebackend.model.enums.Gender;
 import hu.bme.ecommercebackend.model.enums.Role;
 import hu.bme.ecommercebackend.repository.CartRepository;
-import hu.bme.ecommercebackend.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -46,7 +45,7 @@ public class CartServiceTest {
         Brand mockBrand1 = new Brand(4L, "Samsung", "image_url", "Technical devices from Korea");
         mockProduct1 = new Product(1L, "Test poduct1", 8, "Teszt description1", null, Arrays.asList("TestUrl11", "TestUrl21"), 100, mockCategory1, mockBrand1);
         Product mockProduct2 = new Product(2L, "Test poduct2", 2, "Teszt description2", 10, Arrays.asList("TestUrl12", "TestUrl22"), 100, mockCategory1, mockBrand1);
-        mockUser1 = new User("asdf", Role.USER, "testEmail1@email.com", "Test1First", "Test1Last","06301212012",Set.of(mockProduct1), Gender.MALE ,new ArrayList<>(),new ArrayList<>(), new Address("HU", "Dabas", "Temető utca", "23", "2371"));
+        mockUser1 = new User("asdf", Role.USER, "testEmail1@email.com", "Test1First", "Test1Last", "06301212012", Set.of(mockProduct1), Gender.MALE, new ArrayList<>(), new ArrayList<>(), new Address("HU", "Dabas", "Temető utca", "23", "2371"));
         mockCartElement1 = new CartElement(3L, mockProduct1, 2, mockUser1);
         mockCartElement2 = new CartElement(4L, mockProduct2, 3, mockUser1);
         mockUser1.getCart().add(mockCartElement1);
@@ -76,7 +75,7 @@ public class CartServiceTest {
         doNothing().when(cartRepository).deleteById(mockCartElement1.getId());
         when(cartRepository.findUserById(mockCartElement1.getId())).thenReturn(mockUser1);
 
-      cartService.deleteCartElementFromUser(mockCartElement1.getId(), mockUser1.getId());
+        cartService.deleteCartElementFromUser(mockCartElement1.getId(), mockUser1.getId());
     }
 
     @Test
@@ -97,7 +96,7 @@ public class CartServiceTest {
 
     @Test
     void testAddToCart() {
-        User mockUser = new User(mockUser1.getId(), mockUser1.getRole(), mockUser1.getEmail(), mockUser1.getFirstName(), mockUser1.getLastName(),mockUser1.getPhoneNumber(),new HashSet<>(), mockUser1.getGender(),new ArrayList<CartElement>(),new ArrayList<>(), mockUser1.getAddress());
+        User mockUser = new User(mockUser1.getId(), mockUser1.getRole(), mockUser1.getEmail(), mockUser1.getFirstName(), mockUser1.getLastName(), mockUser1.getPhoneNumber(), new HashSet<>(), mockUser1.getGender(), new ArrayList<CartElement>(), new ArrayList<>(), mockUser1.getAddress());
         CartElement mockCartElement = new CartElement(null, mockCartElement1.getProduct(), mockCartElement1.getQuantity(), mockUser);
         when(userService.getUserById(mockUser.getId())).thenReturn(mockUser);
         mockUser.getCart().add(mockCartElement);

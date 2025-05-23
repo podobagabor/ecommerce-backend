@@ -135,9 +135,9 @@ public class CategoryService {
     public List<Long> getSubCategoryIds(Category category) {
         List<Long> categoryIds = new ArrayList<Long>();
         categoryIds.add(category.getId());
-        category.getSubCategories().forEach( subCategory -> {
+        category.getSubCategories().forEach(subCategory -> {
             categoryIds.add(subCategory.getId());
-            if(!subCategory.getSubCategories().isEmpty()) {
+            if (!subCategory.getSubCategories().isEmpty()) {
                 categoryIds.addAll(getSubCategoryIds(subCategory));
             }
         });

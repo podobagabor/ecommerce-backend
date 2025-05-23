@@ -39,8 +39,8 @@ public class SavedItemsServiceTest {
         Brand mockBrand1 = new Brand(1L, "Samsung", "image_url", "Technical devices from Korea");
         mockProduct1 = new Product(1L, "Test poduct1", 2, "Teszt description1", null, Arrays.asList("TestUrl11", "TestUrl21"), 100, mockCategory1, mockBrand1);
         Product mockProduct2 = new Product(2L, "Test poduct2", 2, "Teszt description2", 10, Arrays.asList("TestUrl12", "TestUrl22"), 100, mockCategory1, mockBrand1);
-        mockUser1 = new User("asdf", Role.USER, "testEmail1@email.com", "Test1First", "Test1Last","06709887776", new HashSet<>(Set.of(mockProduct1, mockProduct2)),Gender.MALE, new ArrayList<>(), new ArrayList<>(), new Address("HU", "Dabas", "Temető utca", "23", "2371"));
-        mockUser2 = new User("fdsa", Role.ADMIN, "testEmail2@email.com", "Test2First", "Test2Last","06205454345", new HashSet<>(Set.of(mockProduct2)),Gender.MALE, new ArrayList<>(), new ArrayList<>(), new Address("HU", "Dabas", "Temető utca", "23", "2371"));
+        mockUser1 = new User("asdf", Role.USER, "testEmail1@email.com", "Test1First", "Test1Last", "06709887776", new HashSet<>(Set.of(mockProduct1, mockProduct2)), Gender.MALE, new ArrayList<>(), new ArrayList<>(), new Address("HU", "Dabas", "Temető utca", "23", "2371"));
+        mockUser2 = new User("fdsa", Role.ADMIN, "testEmail2@email.com", "Test2First", "Test2Last", "06205454345", new HashSet<>(Set.of(mockProduct2)), Gender.MALE, new ArrayList<>(), new ArrayList<>(), new Address("HU", "Dabas", "Temető utca", "23", "2371"));
 
     }
 
@@ -67,7 +67,7 @@ public class SavedItemsServiceTest {
         when(productService.getProductById(mockProduct1.getId())).thenReturn(mockProduct1);
 
         ProductDto product = savedItemsService.addProductToSaved(mockProduct1.getId(), mockUser2.getId());
-        assertEquals(modifiedMockUser,mockUser2);
+        assertEquals(modifiedMockUser, mockUser2);
     }
 
     @Test

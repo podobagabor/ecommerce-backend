@@ -3,7 +3,6 @@ package hu.bme.ecommercebackend.controller;
 import hu.bme.ecommercebackend.dto.Product.ProductDto;
 import hu.bme.ecommercebackend.service.SavedItemsService;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -28,11 +27,11 @@ public class SavedController {
 
     @PutMapping(value = "/add/{id}")
     public ResponseEntity<ProductDto> addProductToSaved(@PathVariable Long id, @AuthenticationPrincipal Jwt jwt) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedItemsService.addProductToSaved(id,jwt.getSubject()));
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedItemsService.addProductToSaved(id, jwt.getSubject()));
     }
 
     @DeleteMapping(value = "/remove/{id}")
     public ResponseEntity<Integer> removeProductFromSaved(@PathVariable Long id, @AuthenticationPrincipal Jwt jwt) {
-        return ResponseEntity.ok(savedItemsService.removeProductFromSaved(id,jwt.getSubject()));
+        return ResponseEntity.ok(savedItemsService.removeProductFromSaved(id, jwt.getSubject()));
     }
 }

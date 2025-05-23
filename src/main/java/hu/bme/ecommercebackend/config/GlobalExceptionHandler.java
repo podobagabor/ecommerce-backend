@@ -1,4 +1,5 @@
 package hu.bme.ecommercebackend.config;
+
 import hu.bme.ecommercebackend.customExceptions.ActionForbiddenException;
 import hu.bme.ecommercebackend.customExceptions.EntityNotFoundException;
 import hu.bme.ecommercebackend.customExceptions.IllegalActionException;
