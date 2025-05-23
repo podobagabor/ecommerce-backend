@@ -38,7 +38,7 @@ public class EmailService {
     public String orderCreatedMessage(String name, Order order) {
         String orderItems = "";
         for (int i = 0; i < order.getItems().size(); i++) {
-            orderItems += "- " + order.getItems().get(i).getProduct().getName() + " - " + order.getItems().get(i).getQuantity()+ "db<br>";
+            orderItems += "- " + order.getItems().get(i).getProduct().getName() + " - " + order.getItems().get(i).getQuantity() + "db<br>";
         }
         return "Dear " + name + "!<br>Your order with number " + order.getId() + " was created in the webshops service.<br>Your order contains the fallowing items:<br>" + orderItems + "<br><br>Best regards,<br>E-commerce Webshop Company";
     }

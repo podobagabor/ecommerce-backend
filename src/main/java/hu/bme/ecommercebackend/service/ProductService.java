@@ -1,7 +1,6 @@
 package hu.bme.ecommercebackend.service;
 
 import hu.bme.ecommercebackend.customExceptions.EntityNotFoundException;
-import hu.bme.ecommercebackend.dto.Category.CategoryDetailedDto;
 import hu.bme.ecommercebackend.dto.Product.ProductCreateDto;
 import hu.bme.ecommercebackend.dto.Product.ProductDto;
 import hu.bme.ecommercebackend.dto.Product.ProductModifyDto;
@@ -99,7 +98,7 @@ public class ProductService {
         Product productEntity = productRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Unknown product entity"));
         productEntity.setCount(productEntity.getCount() - value);
         if (productEntity.getCount() < 3) {
-            this.emailService.sendEmail(adminEmail,"Shortage of stock",this.emailService.getShortageOfStochForAdmin(productEntity));
+            this.emailService.sendEmail(adminEmail, "Shortage of stock", this.emailService.getShortageOfStochForAdmin(productEntity));
         }
         return new ProductDto(productEntity);
     }

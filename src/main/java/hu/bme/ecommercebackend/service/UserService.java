@@ -108,8 +108,8 @@ public class UserService {
     @Transactional
     public UserDtoDetailed modifyUser(String userId, UserModifyDto userDto) {
         User userEntity = getUserById(userId);
-        if(!Objects.equals(userEntity.getEmail(), userDto.getEmail())) {
-            this.keycloakService.changeEmail(userId,userDto.getEmail());
+        if (!Objects.equals(userEntity.getEmail(), userDto.getEmail())) {
+            this.keycloakService.changeEmail(userId, userDto.getEmail());
         }
         userEntity.setAddress(userDto.getAddress());
         userEntity.setEmail(userDto.getEmail());

@@ -14,10 +14,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.lang.reflect.Array;
 import java.util.*;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
@@ -110,7 +110,7 @@ public class CategoryServiceTest {
 
         when(categoryRepository.findById(mockCategory2.getId())).thenReturn(Optional.ofNullable(mockCategory2));
         Long parentCategoryId = mockModifiedCategory.getParentCategory() != null ? mockModifiedCategory.getParentCategory().getId() : null;
-        CategoryDto modifiedCategoryDto = categoryService.modifyCategory(new CategoryModifyDto(mockModifiedCategory.getId(),mockModifiedCategory.getName(),parentCategoryId));
+        CategoryDto modifiedCategoryDto = categoryService.modifyCategory(new CategoryModifyDto(mockModifiedCategory.getId(), mockModifiedCategory.getName(), parentCategoryId));
 
         assertEquals(modifiedCategoryDto, new CategoryDto(mockModifiedCategory));
     }
@@ -118,7 +118,7 @@ public class CategoryServiceTest {
     @Test
     void testDeleteCategoryWithId() {
         doNothing().when(categoryRepository).deleteById(mockCategory1.getId());
-        when(productRepository.existsByCategoryIdIn(Arrays.asList(mockCategory1.getId(),mockCategory2.getId()))).thenReturn(false);
+        when(productRepository.existsByCategoryIdIn(Arrays.asList(mockCategory1.getId(), mockCategory2.getId()))).thenReturn(false);
         when(categoryRepository.findById(mockCategory1.getId())).thenReturn(Optional.ofNullable(mockCategory1));
 
         categoryService.deleteCategoryWithId(mockCategory1.getId());

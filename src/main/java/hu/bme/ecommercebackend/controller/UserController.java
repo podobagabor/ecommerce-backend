@@ -37,8 +37,8 @@ public class UserController {
     }
 
     @PutMapping(value = "/modify")
-    public ResponseEntity<UserDtoDetailed> modifyUser(@RequestBody UserModifyDto user,@AuthenticationPrincipal Jwt jwt) {
-        return ResponseEntity.ok(userService.modifyUser(jwt.getSubject(),user));
+    public ResponseEntity<UserDtoDetailed> modifyUser(@RequestBody UserModifyDto user, @AuthenticationPrincipal Jwt jwt) {
+        return ResponseEntity.ok(userService.modifyUser(jwt.getSubject(), user));
     }
 
     @GetMapping(value = "verifyEmail/{token}")
@@ -54,7 +54,7 @@ public class UserController {
 
     @PostMapping(value = "/setNewPassword")
     public ResponseEntity<Void> setNewPassword(@RequestBody NewPasswordDto newPasswordDto) {
-        userService.setNewPassword(newPasswordDto.getToken(),newPasswordDto.getNewPassword());
+        userService.setNewPassword(newPasswordDto.getToken(), newPasswordDto.getNewPassword());
         return ResponseEntity.accepted().build();
     }
 }

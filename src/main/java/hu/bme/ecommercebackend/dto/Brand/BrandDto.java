@@ -35,12 +35,12 @@ public class BrandDto {
 
     @Override
     public boolean equals(Object obj) {
-        if(this == obj) {
+        if (this == obj) {
             return true;
         }
-        if(obj == null || obj.getClass() != this.getClass()) {
+        if (obj == null || obj.getClass() != this.getClass()) {
             return false;
         }
-        return (Objects.equals(this.id,((BrandDto) obj).getId()) && Objects.equals(this.name,((BrandDto) obj).getName()) && Objects.equals(this.description,((BrandDto) obj).getDescription()) && Objects.equals(this.imageUrl,((BrandDto) obj).getImageUrl()));
+        return (Objects.equals(this.id, ((BrandDto) obj).getId()) && Objects.equals(this.name, ((BrandDto) obj).getName()) && Objects.equals(this.description, ((BrandDto) obj).getDescription()) && Objects.equals(this.imageUrl, ((BrandDto) obj).getImageUrl()));
     }
 }

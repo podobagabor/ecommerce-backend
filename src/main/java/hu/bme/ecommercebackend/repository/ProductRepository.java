@@ -8,5 +8,6 @@ import java.util.List;
 
 public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpecificationExecutor<Product> {
     boolean existsByCategoryId(Long categoryId);
+
     boolean existsByCategoryIdIn(List<Long> categories);
 }

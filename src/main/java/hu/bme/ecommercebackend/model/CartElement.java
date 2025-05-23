@@ -3,8 +3,6 @@ package hu.bme.ecommercebackend.model;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.Objects;
-
 @Entity
 @NoArgsConstructor
 @Getter

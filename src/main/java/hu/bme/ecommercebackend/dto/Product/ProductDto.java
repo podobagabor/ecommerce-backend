@@ -57,8 +57,8 @@ public class ProductDto {
 
     @Override
     public boolean equals(Object obj) {
-        if(this == obj) return true;
-        if(obj == null || obj.getClass() != this.getClass()) return false;
+        if (this == obj) return true;
+        if (obj == null || obj.getClass() != this.getClass()) return false;
         return (Objects.equals(this.id, ((ProductDto) obj).getId()) &&
                 Objects.equals(this.name, ((ProductDto) obj).getName()) &&
                 Objects.equals(this.description, ((ProductDto) obj).getDescription()) &&

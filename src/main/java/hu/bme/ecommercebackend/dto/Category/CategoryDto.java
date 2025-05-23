@@ -30,7 +30,7 @@ public class CategoryDto {
     public CategoryDto(Category category) {
         this.id = category.getId();
         this.name = category.getName();
-        if(category.getParentCategory() != null) {
+        if (category.getParentCategory() != null) {
             this.parentCategoryId = category.getParentCategory().getId();
         } else {
             this.parentCategoryId = null;
@@ -40,12 +40,12 @@ public class CategoryDto {
 
     @Override
     public boolean equals(Object obj) {
-        if(this == obj) {
+        if (this == obj) {
             return true;
         }
-        if(obj == null || obj.getClass() != this.getClass()) {
+        if (obj == null || obj.getClass() != this.getClass()) {
             return false;
         }
-        return (Objects.equals(this.id, ((CategoryDto) obj).getId()) && Objects.equals(this.name,((CategoryDto) obj).getName()) && Objects.equals(this.subCategoryIds,((CategoryDto) obj).getSubCategoryIds()) && Objects.equals(this.parentCategoryId,((CategoryDto) obj).getParentCategoryId()));
+        return (Objects.equals(this.id, ((CategoryDto) obj).getId()) && Objects.equals(this.name, ((CategoryDto) obj).getName()) && Objects.equals(this.subCategoryIds, ((CategoryDto) obj).getSubCategoryIds()) && Objects.equals(this.parentCategoryId, ((CategoryDto) obj).getParentCategoryId()));
     }
 }
