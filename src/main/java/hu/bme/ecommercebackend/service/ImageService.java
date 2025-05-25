@@ -37,7 +37,8 @@ public class ImageService {
     public void deleteImage(String url) {
         if (url != null) {
             try {
-                Path filePath = Paths.get("files", url);
+                Path filePath = Paths.get(url);
+                System.out.println("File path: " + filePath.toAbsolutePath());
                 Files.deleteIfExists(filePath);
             } catch (Exception e) {
                 throw new RuntimeException("Delete failed: " + url, e);

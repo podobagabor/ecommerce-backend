@@ -66,11 +66,14 @@ public class ProductController {
 
     @GetMapping(value = "/public/list")
     public ResponseEntity<Page<ProductDto>> getProductsByParams(
+            @RequestParam(required = false) Long id,
             @RequestParam(required = false) String name,
+            @RequestParam(required = false) Boolean isActive,
             @RequestParam(required = false) List<Long> categoryId,
             @RequestParam(defaultValue = "false") Boolean discount,
             @RequestParam(defaultValue = "0") Integer minPrice,
             @RequestParam(required = false) Integer maxPrice,
+            @RequestParam(required = false) Integer maxQuantity,
             @RequestParam(required = false) List<Long> brandId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
@@ -78,7 +81,7 @@ public class ProductController {
             @RequestParam(required = false) Sort.Direction sortDirection
     ) {
         Pageable pageable = PageRequest.of(page, size, sortDirection == null ? Sort.Direction.ASC : sortDirection, sortId);
-        return ResponseEntity.ok(productService.findAll(name, categoryId, discount, minPrice, maxPrice, brandId, pageable));
+        return ResponseEntity.ok(productService.findAll(name, maxQuantity, isActive, id, categoryId, discount, minPrice, maxPrice, brandId, pageable));
     }
 
     @PreAuthorize("hasRole('ecommerce_admin')")

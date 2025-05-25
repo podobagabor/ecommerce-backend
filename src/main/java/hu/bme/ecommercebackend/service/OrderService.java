@@ -54,9 +54,10 @@ public class OrderService {
         );
         order.setItems(orderItems);
         userEntity.getCart().clear();
-        emailService.sendEmail(userEntity.getEmail(), "Order successfully created", emailService.orderCreatedMessage(userEntity.getFirstName() + " " + userEntity.getLastName(), order));
-        emailService.sendEmail(adminEmail, "New order", this.emailService.getNewOrderMessageForAdmin(order));
-        return new OrderDto(orderRepository.save(order));
+        Order orderEntity = orderRepository.save(order);
+        emailService.sendEmail(userEntity.getEmail(), "Order successfully created", emailService.orderCreatedMessage(userEntity.getFirstName() + " " + userEntity.getLastName(), orderEntity));
+        emailService.sendEmail(adminEmail, "New order", this.emailService.getNewOrderMessageForAdmin(orderEntity));
+        return new OrderDto(orderEntity);
     }
 
     public OrderDto getOrderDtoById(Long id) {

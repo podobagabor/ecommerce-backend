@@ -47,10 +47,22 @@ public class EcommerceSpecification {
         };
     }
 
-    public static Specification<Product> filterBy(String name, List<Long> categoryId, Boolean discount, Integer minPrice, Integer maxPrice, List<Long> brandId) {
+    public static Specification<Product> filterBy(Long id,String name, List<Long> categoryId,Integer maxQuantity,Boolean isActive,Boolean discount, Integer minPrice, Integer maxPrice, List<Long> brandId) {
         return (root, criteriaQuery, criteriaBuilder) -> {
             final List<Predicate> predicates = new ArrayList<>();
-            predicates.add(criteriaBuilder.isTrue(root.get("active")));
+            if(isActive != null) {
+                predicates.add(criteriaBuilder.equal(root.get("active"),isActive));
+            } else {
+                predicates.add(criteriaBuilder.isTrue(root.get("active")));
+            }
+            if (id != null) {
+                Expression<String> idAsString = criteriaBuilder.function(
+                        "text",
+                        String.class,
+                        root.get("id")
+                );
+                predicates.add(criteriaBuilder.like(idAsString, "%" + id + "%"));
+            }
             if (name != null) {
                 predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("name")), "%" + name.toLowerCase() + "%"));
             }
@@ -65,6 +77,9 @@ public class EcommerceSpecification {
             }
             if (maxPrice != null) {
                 predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("price"), maxPrice));
+            }
+            if (maxQuantity != null) {
+                predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("count"), maxQuantity));
             }
             if (brandId != null) {
                 predicates.add(root.get("brand").get("id").in(brandId));
