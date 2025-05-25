@@ -108,21 +108,23 @@ public class UserService {
     @Transactional
     public UserDtoDetailed modifyUser(String userId, UserModifyDto userDto) {
         User userEntity = getUserById(userId);
-        Boolean emailExist = userRepository.existsByEmail(userDto.getEmail());
-        if (emailExist) {
-            throw new IllegalActionException("Ez az e-mailcím már használva van");
-        } else {
-            if (!Objects.equals(userEntity.getEmail(), userDto.getEmail())) {
+        if (!Objects.equals(userEntity.getEmail(), userDto.getEmail())) {
+            Boolean emailExist = userRepository.existsByEmail(userDto.getEmail());
+            if (emailExist) {
+                throw new IllegalActionException("Ez az e-mailcím már használva van");
+            } else {
                 this.keycloakService.changeEmail(userId, userDto.getEmail());
+
             }
-            userEntity.setAddress(userDto.getAddress());
-            userEntity.setEmail(userDto.getEmail());
-            userEntity.setFirstName(userDto.getFirstName());
-            userEntity.setLastName(userDto.getLastName());
-            userEntity.setPhoneNumber(userDto.getPhone());
-            userEntity.setGender(userDto.getGender());
-            return new UserDtoDetailed(userEntity);
         }
+        userEntity.setAddress(userDto.getAddress());
+        userEntity.setEmail(userDto.getEmail());
+        userEntity.setFirstName(userDto.getFirstName());
+        userEntity.setLastName(userDto.getLastName());
+        userEntity.setPhoneNumber(userDto.getPhone());
+        userEntity.setGender(userDto.getGender());
+        return new UserDtoDetailed(userEntity);
+
     }
 
     @Transactional
