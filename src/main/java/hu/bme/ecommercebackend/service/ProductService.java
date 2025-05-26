@@ -142,8 +142,8 @@ public class ProductService {
         return new ProductDto(productEntity);
     }
 
-    public Page<ProductDto> findAll(String name, List<Long> categoryId, Boolean discount, Integer minPrice, Integer maxPrice, List<Long> brandId, Pageable pageable) {
-        Specification<Product> spec = EcommerceSpecification.filterBy(name, categoryId, discount, minPrice, maxPrice, brandId);
+    public Page<ProductDto> findAll(String name, Integer maxQuantity, Boolean isActive, Long id, List<Long> categoryId, Boolean discount, Integer minPrice, Integer maxPrice, List<Long> brandId, Pageable pageable) {
+        Specification<Product> spec = EcommerceSpecification.filterBy(id, name, categoryId, maxQuantity, isActive, discount, minPrice, maxPrice, brandId);
         return productRepository.findAll(spec, pageable).map(ProductDto::new);
     }
 
