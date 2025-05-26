@@ -1,7 +1,7 @@
 ﻿# ecommerce-backend
 
 To get the KeyCloak image with the Ecommerce-realms, do the following steps:
-    1. docker pull podobagabor/ecommerce_keycloak:v1
+    1. docker pull podobagabor/ecommerce_keycloak:v2
     2. docker run --name ecommerce-keycloak -p 8081:8080 podobagabor/ecommerce_keycloak:v2 (admin ui auth: admin/admin)
 
 To get the PostgreSQL image, do the following steps:
