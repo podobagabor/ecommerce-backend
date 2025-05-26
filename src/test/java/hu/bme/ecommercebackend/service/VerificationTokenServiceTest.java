@@ -69,7 +69,7 @@ public class VerificationTokenServiceTest {
     }
 
     @Test
-    void handleValidationDateNotTest() {
+    void handleValidationDateNotOKTest() {
         when(verificationTokenRepository.findById(emailTokenExpired.getToken())).thenReturn(Optional.ofNullable(emailTokenExpired));
         doNothing().when(verificationTokenRepository).delete(emailTokenExpired);
 
