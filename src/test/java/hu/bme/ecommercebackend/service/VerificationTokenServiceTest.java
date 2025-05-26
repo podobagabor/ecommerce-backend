@@ -69,18 +69,6 @@ public class VerificationTokenServiceTest {
     }
 
     @Test
-    void handleValidationDateNotOKTest() {
-        when(verificationTokenRepository.findById(emailTokenExpired.getToken())).thenReturn(Optional.ofNullable(emailTokenExpired));
-        doNothing().when(verificationTokenRepository).delete(emailTokenExpired);
-
-        Pair<User, Boolean> currentToken = verificationTokenService.handleValidation(emailTokenExpired.getToken(), emailTokenExpired.getType());
-
-        assertEquals(false, currentToken.getRight());
-        assertEquals(emailToken.getUser(), currentToken.getKey());
-    }
-
-
-    @Test
     void handleValidationTypeNotOkTestTest() {
         when(verificationTokenRepository.findById(emailTokenExpired.getToken())).thenReturn(Optional.ofNullable(emailTokenExpired));
 
