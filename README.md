@@ -34,7 +34,7 @@ $ng serve
 Ezt követően a frontend alkalmazás a localhost:4200-on elérhetővé válik a böngészőben.
 
 ADMIN USER:
-admin/amdin
+admin/admin
 
 TEST USER:
 teszt@teszt.io/pass
